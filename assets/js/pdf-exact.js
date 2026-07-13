@@ -1,6 +1,7 @@
 "use strict";
 
 document.write(
+  '<script src="assets/js/runtime-config.js"><\/script>' +
   '<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"><\/script>' +
   '<script src="assets/js/signature-pad.js"><\/script>' +
   '<script src="assets/js/signature-pad-registry.js"><\/script>' +
