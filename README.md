@@ -97,7 +97,7 @@ http://127.0.0.1:8765/
 
 Voor de QR-koppeling moeten computer en mobiel toestel op hetzelfde vertrouwde netwerk zitten. Windows Firewall kan vragen om Python toegang tot het privénetwerk te geven.
 
-## GitHub Pages met online backend
+## GitHub Pages met Oracle Cloud Always Free
 
 GitHub Pages publiceert de statische interface op:
 
@@ -105,39 +105,46 @@ GitHub Pages publiceert de statische interface op:
 https://toby13dp.github.io/kbkb-online-affiliatieformulier/
 ```
 
-GitHub Pages kan zelf geen Pythonproces of LibreOffice uitvoeren. GitHub Actions kan een backend bouwen en implementeren, maar een workflow-run is geen permanente webserver. Daarom bestaat de online architectuur uit twee delen:
+GitHub Pages kan zelf geen Pythonproces of LibreOffice uitvoeren. De gekozen online architectuur bestaat daarom uit:
 
 1. **GitHub Pages** voor de interface;
-2. **een permanente containerhost** voor `hosted_server.py` en LibreOffice.
+2. **Oracle Cloud Always Free** voor één permanente Ubuntu/Ampere A1-VM;
+3. **Docker Compose** voor de backend en Caddy;
+4. **GitHub Actions** voor automatische implementatie naar de Oracle-VM.
 
-De workflow `.github/workflows/publish-backend-image.yml` bouwt en publiceert de backendcontainer naar:
-
-```text
-ghcr.io/toby13dp/kbkb-affiliatie-backend:latest
-```
-
-De container verwacht onder meer:
+De aanbevolen Oracle-configuratie is:
 
 ```text
-KBKB_FRONTEND_URL=https://toby13dp.github.io/kbkb-online-affiliatieformulier
-PORT=8765
+VM.Standard.A1.Flex
+2 OCPU
+12 GB geheugen
+Ubuntu 24.04 Minimal aarch64
 ```
 
-Na deployment van de container moet in GitHub bij **Settings → Secrets and variables → Actions → Variables** deze repositoryvariabele worden ingesteld:
+De workflow `.github/workflows/deploy-oracle.yml` verstuurt de toepassing via SSH, bouwt de Python/LibreOffice-container en start Caddy met automatische HTTPS. De Pages-workflow leest daarna deze repositoryvariabele:
 
 ```text
 KBKB_API_BASE=https://jouw-backend-domein.example
 ```
 
-De Pages-workflow neemt die waarde op in `assets/js/runtime-config.js`. Daarna gebruikt de Pages-versie dezelfde Excel-export- en ondertekenings-API als de lokale toepassing.
+Volledige klik-voor-klik installatie:
 
-Een GitHub-token mag nooit in de publieke Pages-JavaScriptcode worden geplaatst om `workflow_dispatch` te starten. Zonder permanente containerhost kan de online export niet veilig en betrouwbaar werken.
+[Oracle Cloud Always Free – productie-installatie](docs/ORACLE_CLOUD.md)
+
+De workflow `.github/workflows/publish-backend-image.yml` blijft daarnaast beschikbaar om een los backendimage naar GitHub Container Registry te publiceren:
+
+```text
+ghcr.io/toby13dp/kbkb-affiliatie-backend:latest
+```
+
+Een GitHub-token mag nooit in de publieke Pages-JavaScriptcode worden geplaatst om `workflow_dispatch` te starten. De GitHub Actions-workflow implementeert daarom via versleutelde repositorysecrets naar de permanente Oracle-VM.
 
 ## Belangrijkste bestanden
 
 ```text
 .
 ├── .github/workflows/
+│   ├── deploy-oracle.yml
 │   ├── deploy-pages.yml
 │   └── publish-backend-image.yml
 ├── assets/
@@ -154,6 +161,11 @@ Een GitHub-token mag nooit in de publieke Pages-JavaScriptcode worden geplaatst 
 │       ├── signature-pad-registry.js
 │       ├── pdf-export.js
 │       └── pdf-signature.js
+├── scripts/
+│   ├── build_site.py
+│   └── oracle_bootstrap.sh
+├── Caddyfile
+├── docker-compose.oracle.yml
 ├── Dockerfile
 ├── hosted_server.py
 ├── local_server.py
