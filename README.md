@@ -1,106 +1,101 @@
-# KBKB Online Affiliatieformulier
+# Belgische Korfbalbond - Online affiliatieformulier
 
-Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de Koninklijke Belgische Korfbalbond invult en rechtstreeks als printklare PDF downloadt.
+Een statische, Nederlandstalige webtoepassing waarmee een gebruiker het officiële affiliatieformulier digitaal invult en als PDF downloadt.
+
+De PDF gebruikt **de rechtstreeks uit het oorspronkelijke Excel-bestand geëxporteerde pagina als vaste template**. Daardoor blijven de originele opmaak, vakken, juridische tekst, KBKB-identiteit, contactgegevens en handtekeningzones visueel ongewijzigd.
 
 ## Belangrijkste kenmerken
 
-- volledig client-side: er is geen backend of database;
+- Belgische Korfbalbond-branding met het aangeleverde Korfbal België-logo;
+- volledig client-side: geen backend, database of formulierdienst;
 - persoonsgegevens verlaten de browser niet;
-- directe lokale download als een geldig A4-PDF-bestand;
-- validatie van verplichte velden, geboortedatum en Belgisch rijksregisternummer;
-- automatische velden voor een wettelijke vertegenwoordiger bij minderjarigen;
+- PDF-uitvoer met exact dezelfde achtergrond als het officiële Excel-formulier;
+- invulling op de oorspronkelijke veldposities;
+- validatie van verplichte velden en Belgisch rijksregisternummer;
+- automatische gegevens voor een wettelijke vertegenwoordiger bij minderjarigen;
 - aanvullende velden voor een vorige buitenlandse korfbalclub;
-- aparte handtekeningvakken voor aanvrager, wettelijke vertegenwoordiger en clubsecretaris;
 - responsive werking op desktop, tablet en Android;
-- bruikbaar via GitHub Pages en als lokaal HTML-bestand.
+- geen externe JavaScript- of PDF-bibliotheken nodig tijdens het gebruik.
 
-## Belangrijk: afdrukken en ondertekenen
+## Verplichte vervolgstap
 
 Na het invullen:
 
-1. Klik op **PDF opslaan**.
-2. De browser downloadt een bestand met de naam `Affiliatie_Naam_Voornaam.pdf`.
-3. Open en controleer de opgeslagen PDF.
-4. Druk de PDF af.
-5. Plaats onderaan de vereiste handtekening(en) met pen.
+1. Klik op **Officiële PDF opslaan**.
+2. Open en controleer het gedownloade bestand.
+3. Druk de PDF af.
+4. Plaats onderaan de vereiste handtekening(en) met pen.
+5. Laat de clubsecretaris waar nodig stempelen en ondertekenen.
 
-Een opgeslagen maar niet ondertekende PDF is nog niet volledig afgewerkt.
+Een gedownloade maar niet ondertekende PDF is nog niet volledig afgewerkt.
 
-## Online gebruiken
+## GitHub Pages
 
-Na een succesvolle GitHub Pages-deployment is de toepassing beschikbaar op:
+De Pages-workflow bouwt eerst de officiële PDF-template uit het oorspronkelijke Excelbestand en publiceert daarna de statische site.
+
+Na een succesvolle deployment is de toepassing beschikbaar op:
 
 `https://toby13dp.github.io/kbkb-online-affiliatieformulier/`
 
-Wanneer GitHub Pages nog niet actief is:
+GitHub Pages moet bij **Settings → Pages → Build and deployment** op **GitHub Actions** staan.
 
-1. Open de repository op GitHub.
-2. Ga naar **Settings** → **Pages**.
-3. Kies bij **Build and deployment** als bron **GitHub Actions**.
-4. Open **Actions** en start zo nodig de workflow **Deploy GitHub Pages**.
+## Lokale build
 
-## Lokaal gebruiken
+Vereisten:
 
-1. Download of clone deze repository.
-2. Open `index.html` in een recente versie van Chrome, Edge of Firefox.
-3. Vul het formulier in.
-4. Klik op **PDF opslaan**.
-5. Open de gedownloade PDF.
-6. Druk de PDF af en onderteken onderaan.
+- Python 3;
+- LibreOffice Calc.
 
-Er is geen installatie, buildstap of internetverbinding nodig.
+Bouw de site met:
+
+```bash
+python3 scripts/build_site.py
+```
+
+Open daarna:
+
+```text
+_site/index.html
+```
+
+De build maakt uit `template/4322_Affiliatieformulier_PC.xlsx.b64` onder meer:
+
+```text
+_site/assets/js/pdf-template.js
+_site/assets/templates/4322_Affiliatieformulier_PC.pdf
+```
 
 ## Projectstructuur
 
 ```text
 .
-├── .github/
-│   └── workflows/
-│       └── deploy-pages.yml
+├── .github/workflows/deploy-pages.yml
 ├── assets/
-│   ├── css/
-│   │   └── styles.css
+│   ├── css/styles.css
+│   ├── img/korfbal-belgium.svg
 │   └── js/
-│       ├── app.js
 │       ├── form.js
 │       ├── main.js
-│       ├── pdf-core.js
-│       └── pdf.js
+│       └── pdf-exact.js
 ├── docs/
 │   ├── PRIVACY.md
 │   └── VELDENMAPPING.md
-├── .gitignore
-├── .nojekyll
+├── scripts/build_site.py
+├── template/4322_Affiliatieformulier_PC.xlsx.b64
 ├── index.html
 └── README.md
 ```
 
 ## Technische werking
 
-De toepassing:
+1. `scripts/build_site.py` decodeert het originele `.xlsx`-bestand.
+2. LibreOffice Calc exporteert het werkblad naar één officiële A4-PDF.
+3. Die PDF wordt als Base64 opgenomen in de Pages-build.
+4. De browser voegt alleen de ingevulde waarden toe via een incrementele PDF-update.
+5. De oorspronkelijke PDF-inhoud wordt niet herschreven of gerasterd.
 
-- valideert de invoer volledig in de browser;
-- bouwt zonder externe bibliotheek een geldig PDF 1.4-document op;
-- gebruikt een vaste A4-indeling met vectorlijnen, tekstvelden en handtekeningvakken;
-- downloadt het document via een lokale `Blob`-URL;
-- gebruikt de naam en voornaam als onderdeel van de bestandsnaam;
-- bevat geen externe analytics-, formulier- of opslagdienst.
+Een export zonder ingevulde velden is bij een rendervergelijking pixelidentiek aan de uit Excel gegenereerde PDF-template.
 
-De PDF-generator staat in `assets/js/pdf-core.js`. De koppeling tussen formuliervelden en de PDF staat in `assets/js/pdf.js`.
+## Privacy
 
-## Ondersteunde browsers
-
-Gebruik een recente versie van:
-
-- Google Chrome;
-- Microsoft Edge;
-- Mozilla Firefox;
-- een actuele Chromium-browser op Android.
-
-De browser moet `Blob`, `URL.createObjectURL` en `TextEncoder` ondersteunen. Dit is standaard aanwezig in actuele browsers.
-
-## Privacy en beveiliging
-
-De toepassing verzendt geen ingevulde gegevens naar GitHub, een server of een externe API. Zie [docs/PRIVACY.md](docs/PRIVACY.md) voor de technische privacy-uitleg.
-
-Een geëxporteerde PDF kan gevoelige persoonsgegevens en een rijksregisternummer bevatten. Bewaar en deel het bestand uitsluitend via geschikte, beveiligde kanalen.
+Zie [docs/PRIVACY.md](docs/PRIVACY.md). De toepassing gebruikt geen `localStorage`, cookies, analytics of externe formulierverwerking.
