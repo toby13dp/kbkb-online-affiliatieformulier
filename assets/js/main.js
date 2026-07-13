@@ -5,24 +5,24 @@ form.addEventListener("submit", event => {
   clearStatus();
 
   if (!validateForm()) {
-    showStatus("error", "Controleer de gemarkeerde velden voordat je de PDF maakt.");
+    showStatus("error", "Controleer de gemarkeerde velden voordat je de PDF opslaat.");
     return;
   }
 
   saveButton.disabled = true;
   resetButton.disabled = true;
   const originalLabel = saveButton.textContent;
-  saveButton.textContent = "PDF wordt voorbereid…";
+  saveButton.textContent = "PDF wordt opgebouwd…";
 
   try {
-    openPdfExport();
+    const filename = downloadAffiliationPdf();
     showStatus(
       "success",
-      "Het afdrukvenster is geopend. Kies ‘Opslaan als PDF’. Druk de opgeslagen PDF daarna af en onderteken onderaan met pen."
+      `De PDF is opgeslagen als ${filename}. Druk dit bestand nu af en onderteken onderaan met pen.`
     );
   } catch (error) {
     console.error(error);
-    showStatus("error", error instanceof Error ? error.message : "De PDF kon niet worden voorbereid.");
+    showStatus("error", error instanceof Error ? error.message : "De PDF kon niet worden gemaakt.");
   } finally {
     saveButton.disabled = false;
     resetButton.disabled = false;
