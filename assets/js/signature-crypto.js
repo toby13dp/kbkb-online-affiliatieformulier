@@ -1,6 +1,11 @@
 "use strict";
 
 (function () {
+  function apiUrl(path) {
+    const base = String(window.KBKB_API_BASE || "").replace(/\/$/, "");
+    return `${base}${path}`;
+  }
+
   function parseSessionFragment(hash = location.hash) {
     const params = new URLSearchParams(String(hash || "").replace(/^#/, ""));
     const topic = params.get("t") || "";
@@ -13,7 +18,7 @@
   }
 
   async function createSession(minor) {
-    const response = await fetch("/api/signature/session", {
+    const response = await fetch(apiUrl("/api/signature/session"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -27,7 +32,7 @@
   }
 
   async function publishPayload(topic, payload) {
-    const response = await fetch(`/api/signature/${encodeURIComponent(topic)}`, {
+    const response = await fetch(apiUrl(`/api/signature/${encodeURIComponent(topic)}`), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -47,7 +52,7 @@
       if (!active || busy) return;
       busy = true;
       try {
-        const response = await fetch(`/api/signature/${encodeURIComponent(topic)}`, {
+        const response = await fetch(apiUrl(`/api/signature/${encodeURIComponent(topic)}`), {
           cache: "no-store",
           headers: { "Cache-Control": "no-store" }
         });
@@ -83,7 +88,7 @@
 
   async function deleteSession(topic) {
     try {
-      await fetch(`/api/signature/${encodeURIComponent(topic)}`, {
+      await fetch(apiUrl(`/api/signature/${encodeURIComponent(topic)}`), {
         method: "DELETE",
         cache: "no-store"
       });
