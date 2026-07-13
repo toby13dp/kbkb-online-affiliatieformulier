@@ -1,0 +1,115 @@
+name: Deploy backend to Oracle Cloud
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - Dockerfile
+      - Caddyfile
+      - docker-compose.oracle.yml
+      - hosted_server.py
+      - local_server.py
+      - xlsx_patch.py
+      - template/**
+      - assets/**
+      - .github/workflows/deploy-oracle.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: oracle-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: oracle-production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required configuration
+        env:
+          ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          ORACLE_USER: ${{ secrets.ORACLE_USER }}
+          ORACLE_SSH_PRIVATE_KEY: ${{ secrets.ORACLE_SSH_PRIVATE_KEY }}
+          KBKB_BACKEND_DOMAIN: ${{ vars.KBKB_BACKEND_DOMAIN }}
+        run: |
+          test -n "$ORACLE_HOST"
+          test -n "$ORACLE_USER"
+          test -n "$ORACLE_SSH_PRIVATE_KEY"
+          test -n "$KBKB_BACKEND_DOMAIN"
+
+      - name: Configure SSH
+        env:
+          ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          ORACLE_SSH_PRIVATE_KEY: ${{ secrets.ORACLE_SSH_PRIVATE_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$ORACLE_SSH_PRIVATE_KEY" > ~/.ssh/id_oracle
+          chmod 600 ~/.ssh/id_oracle
+          ssh-keyscan -H "$ORACLE_HOST" >> ~/.ssh/known_hosts
+
+      - name: Package application
+        run: |
+          tar \
+            --exclude=.git \
+            --exclude=_site \
+            --exclude=.runtime \
+            --exclude='*.pyc' \
+            --exclude='__pycache__' \
+            -czf /tmp/kbkb-affiliatie.tar.gz .
+
+      - name: Upload application
+        env:
+          ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          ORACLE_USER: ${{ secrets.ORACLE_USER }}
+        run: |
+          scp -i ~/.ssh/id_oracle /tmp/kbkb-affiliatie.tar.gz \
+            "$ORACLE_USER@$ORACLE_HOST:/tmp/kbkb-affiliatie.tar.gz"
+
+      - name: Deploy container stack
+        env:
+          ORACLE_HOST: ${{ secrets.ORACLE_HOST }}
+          ORACLE_USER: ${{ secrets.ORACLE_USER }}
+          KBKB_BACKEND_DOMAIN: ${{ vars.KBKB_BACKEND_DOMAIN }}
+          KBKB_FRONTEND_URL: https://toby13dp.github.io/kbkb-online-affiliatieformulier
+        run: |
+          ssh -i ~/.ssh/id_oracle "$ORACLE_USER@$ORACLE_HOST" \
+            "KBKB_BACKEND_DOMAIN='$KBKB_BACKEND_DOMAIN' KBKB_FRONTEND_URL='$KBKB_FRONTEND_URL' bash -s" <<'REMOTE'
+          set -euo pipefail
+          mkdir -p /opt/kbkb-affiliatie
+          rm -rf /opt/kbkb-affiliatie/current
+          mkdir -p /opt/kbkb-affiliatie/current
+          tar -xzf /tmp/kbkb-affiliatie.tar.gz -C /opt/kbkb-affiliatie/current
+          rm -f /tmp/kbkb-affiliatie.tar.gz
+
+          cd /opt/kbkb-affiliatie/current
+          cat > .env <<EOF
+          KBKB_BACKEND_DOMAIN=${KBKB_BACKEND_DOMAIN}
+          KBKB_FRONTEND_URL=${KBKB_FRONTEND_URL}
+          EOF
+
+          docker compose -f docker-compose.oracle.yml up -d --build --remove-orphans
+          docker image prune -f
+          docker compose -f docker-compose.oracle.yml ps
+          REMOTE
+
+      - name: Verify backend
+        env:
+          KBKB_BACKEND_DOMAIN: ${{ vars.KBKB_BACKEND_DOMAIN }}
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error \
+              "https://${KBKB_BACKEND_DOMAIN}/api/status" >/tmp/kbkb-status.json; then
+              cat /tmp/kbkb-status.json
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Backend health check failed" >&2
+          exit 1
