@@ -20,7 +20,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
-SOURCE_PARTS = sorted((ROOT / "template").glob("source-part-*.b64"))
 LOGO_PARTS = sorted((ROOT / "assets" / "img").glob("logo-part-*.b64"))
 PDF_JS_PARTS = sorted((ROOT / "assets" / "js").glob("pdf-exact-part-*.jsfrag"))
 
@@ -50,11 +49,7 @@ def validated_workbook(data: bytes) -> bytes | None:
 
 
 def load_workbook_source() -> bytes:
-    """Load the exact workbook, preferring the public source supplied by KBKB.
-
-    Repository chunks remain a fallback for local/offline builds. Every source is
-    verified against the known SHA-256 digest before LibreOffice may process it.
-    """
+    """Download the exact workbook supplied by KBKB and verify its digest."""
     errors: list[str] = []
 
     for url in WORKBOOK_URLS:
@@ -69,22 +64,8 @@ def load_workbook_source() -> bytes:
             if workbook is not None:
                 return workbook
             errors.append(f"ongeldige download via {url}")
-        except Exception as exc:  # noqa: BLE001 - retain fallback diagnostics
+        except Exception as exc:  # noqa: BLE001 - retain useful diagnostics
             errors.append(f"downloadfout via {url}: {exc}")
-
-    if SOURCE_PARTS:
-        try:
-            encoded_source = "".join(
-                path.read_text(encoding="utf-8").strip() for path in SOURCE_PARTS
-            )
-            workbook = validated_workbook(
-                base64.b64decode(encoded_source, validate=True)
-            )
-            if workbook is not None:
-                return workbook
-            errors.append("repositoryfallback heeft niet de verwachte SHA-256")
-        except Exception as exc:  # noqa: BLE001
-            errors.append(f"repositoryfallback is ongeldig: {exc}")
 
     raise RuntimeError(
         "De officiële Excel-template kon niet betrouwbaar worden geladen:\n- "
