@@ -4,5 +4,6 @@
 // een tijdelijke ingevulde kopie van het originele Excelbestand.
 document.write(
   '<link rel="stylesheet" href="assets/css/signature.css">' +
-  '<link rel="stylesheet" href="assets/css/signature-wizard.css">'
+  '<link rel="stylesheet" href="assets/css/signature-wizard.css">' +
+  '<link rel="stylesheet" href="assets/css/signature-controls.css">'
 );
