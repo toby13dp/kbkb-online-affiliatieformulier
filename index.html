@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#20242a">
+  <meta name="description" content="Vul het KBKB-affiliatieformulier veilig in en download lokaal een ingevulde Excel-kopie. Persoonsgegevens verlaten de browser niet.">
+  <title>KBKB Online Affiliatieformulier</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">KBKB online affiliatieformulier</p>
+        <h1>Vul het affiliatieformulier in en download een ingevulde Excel-kopie.</h1>
+        <p class="intro">Alle verwerking gebeurt uitsluitend in deze browser. De originele opmaak, beveiliging, afdrukinstellingen en het logo blijven in het Excel-bestand behouden.</p>
+      </div>
+      <div class="local-badge" title="Er worden geen gegevens geüpload">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M12 14v3"/>
+        </svg>
+        Volledig lokaal
+      </div>
+    </header>
+
+    <div class="notice">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.2h.01"/>
+      </svg>
+      <div>De velden voor de aansluitingsdatum, het lidnummer, de stempel en de handtekeningen blijven leeg. Die onderdelen zijn volgens het oorspronkelijke formulier bestemd voor het bondssecretariaat of voor handmatige ondertekening.</div>
+    </div>
+
+    <form id="affiliationForm" novalidate>
+      <section class="section">
+        <div class="section-head">
+          <div class="section-index">1</div>
+          <div class="section-title">
+            <h2>Aanvraag</h2>
+            <p>Kies de affiliatievorm en vul de vereniging in.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field full">
+            <div class="group-label">Aanvraag tot affiliatie als</div>
+            <div class="choice-grid" role="radiogroup" aria-label="Affiliatievorm">
+              <label class="choice">
+                <input type="radio" name="affiliationType" value="competition" required>
+                <span class="choice-text">Competitiespeler</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="affiliationType" value="recreant" required>
+                <span class="choice-text">Recreant</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="affiliationType" value="adherent" required>
+                <span class="choice-text">Adherent</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="affiliationType" value="occasional" required>
+                <span class="choice-text">Occasioneel korfballer<small>Medische verklaring vereist</small></span>
+              </label>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="club">Vereniging</label>
+            <input id="club" name="club" type="text" autocomplete="organization" maxlength="80" required placeholder="Naam van de korfbalvereniging">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div class="section-index">2</div>
+          <div class="section-title">
+            <h2>Gegevens van de aanvrager</h2>
+            <p>Persoons-, adres- en clubgegevens.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="lastName">Naam</label>
+            <input id="lastName" name="lastName" type="text" autocomplete="family-name" maxlength="60" required>
+          </div>
+          <div class="field">
+            <label for="firstName">Voornaam</label>
+            <input id="firstName" name="firstName" type="text" autocomplete="given-name" maxlength="60" required>
+          </div>
+          <div class="field third">
+            <label for="nationality">Nationaliteit</label>
+            <input id="nationality" name="nationality" type="text" autocomplete="country-name" maxlength="40" required>
+          </div>
+          <div class="field third">
+            <label for="birthDate">Geboortedatum</label>
+            <input id="birthDate" name="birthDate" type="date" autocomplete="bday" required>
+          </div>
+          <div class="field third">
+            <label for="nationalNumber">Rijksregisternummer</label>
+            <input id="nationalNumber" name="nationalNumber" type="text" inputmode="numeric" autocomplete="off" maxlength="15" placeholder="JJ.MM.DD-XXX.XX" required>
+            <p class="help">Punten en koppeltekens worden automatisch aangebracht.</p>
+          </div>
+          <div class="field two-thirds">
+            <label for="street">Straat</label>
+            <input id="street" name="street" type="text" autocomplete="address-line1" maxlength="90" required>
+          </div>
+          <div class="field quarter">
+            <label for="houseNumber">Nummer</label>
+            <input id="houseNumber" name="houseNumber" type="text" inputmode="text" autocomplete="address-line2" maxlength="10" required>
+          </div>
+          <div class="field quarter">
+            <label for="box">Bus <span class="optional">optioneel</span></label>
+            <input id="box" name="box" type="text" autocomplete="address-line2" maxlength="10">
+          </div>
+          <div class="field third">
+            <label for="postalCode">Postcode</label>
+            <input id="postalCode" name="postalCode" type="text" inputmode="numeric" autocomplete="postal-code" maxlength="10" required>
+          </div>
+          <div class="field two-thirds">
+            <label for="municipality">Gemeente</label>
+            <input id="municipality" name="municipality" type="text" autocomplete="address-level2" maxlength="60" required>
+          </div>
+          <div class="field">
+            <div class="group-label">Geslacht</div>
+            <div class="choice-grid two" role="radiogroup" aria-label="Geslacht">
+              <label class="choice">
+                <input type="radio" name="gender" value="female" required>
+                <span class="choice-text">Vrouw</span>
+              </label>
+              <label class="choice">
+                <input type="radio" name="gender" value="male" required>
+                <span class="choice-text">Man</span>
+              </label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="previousClub">Vorige korfbalclub <span class="optional">optioneel</span></label>
+            <input id="previousClub" name="previousClub" type="text" maxlength="90">
+          </div>
+          <div class="field full">
+            <label class="switch-row" for="previousClubForeign">
+              <input id="previousClubForeign" name="previousClubForeign" type="checkbox">
+              <span class="switch-copy">
+                <strong>De vorige club was in het buitenland</strong>
+                <span>Toon de aanvullende buitenlandse clubgegevens.</span>
+              </span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="guardianSection" hidden>
+        <div class="section-head">
+          <div class="section-index">3</div>
+          <div class="section-title">
+            <h2>Wettelijke vertegenwoordiger</h2>
+            <p>Verplicht wanneer de aanvrager jonger is dan 18 jaar.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field full">
+            <div id="minorInfo" class="status info show">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.2h.01"/></svg>
+              <span>De ingevoerde geboortedatum maakt de aanvrager minderjarig. Vul daarom deze gegevens in.</span>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="guardianName">Naam en voornaam</label>
+            <input id="guardianName" name="guardianName" type="text" autocomplete="name" maxlength="90">
+          </div>
+          <div class="field">
+            <label for="guardianBirthDate">Geboortedatum</label>
+            <input id="guardianBirthDate" name="guardianBirthDate" type="date">
+          </div>
+          <div class="field">
+            <label for="guardianNationality">Nationaliteit</label>
+            <input id="guardianNationality" name="guardianNationality" type="text" maxlength="40">
+          </div>
+          <div class="field two-thirds">
+            <label for="guardianStreet">Straat</label>
+            <input id="guardianStreet" name="guardianStreet" type="text" autocomplete="address-line1" maxlength="90">
+          </div>
+          <div class="field quarter">
+            <label for="guardianHouseNumber">Nummer</label>
+            <input id="guardianHouseNumber" name="guardianHouseNumber" type="text" maxlength="10">
+          </div>
+          <div class="field quarter">
+            <label for="guardianBox">Bus <span class="optional">optioneel</span></label>
+            <input id="guardianBox" name="guardianBox" type="text" maxlength="10">
+          </div>
+          <div class="field third">
+            <label for="guardianPostalCode">Postcode</label>
+            <input id="guardianPostalCode" name="guardianPostalCode" type="text" inputmode="numeric" maxlength="10">
+          </div>
+          <div class="field two-thirds">
+            <label for="guardianMunicipality">Gemeente</label>
+            <input id="guardianMunicipality" name="guardianMunicipality" type="text" maxlength="60">
+          </div>
+          <div class="field full">
+            <label for="guardianRelationship">Verwantschap met de aanvrager</label>
+            <input id="guardianRelationship" name="guardianRelationship" type="text" maxlength="80" placeholder="Bijvoorbeeld: moeder, vader of voogd">
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="foreignSection" hidden>
+        <div class="section-head">
+          <div class="section-index">4</div>
+          <div class="section-title">
+            <h2>Vorige buitenlandse club</h2>
+            <p>Aanvullende gegevens voor een club buiten België.</p>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field">
+            <label for="foreignMunicipality">Vestigingsgemeente</label>
+            <input id="foreignMunicipality" name="foreignMunicipality" type="text" maxlength="70">
+          </div>
+          <div class="field">
+            <label for="foreignCountry">Land</label>
+            <input id="foreignCountry" name="foreignCountry" type="text" autocomplete="country-name" maxlength="60">
+          </div>
+          <div class="field full">
+            <label for="foreignClubName">Naam van de vorige club</label>
+            <input id="foreignClubName" name="foreignClubName" type="text" maxlength="90">
+          </div>
+          <div class="field full">
+            <label for="formerAddress">Toenmalig adres van de aanvrager</label>
+            <input id="formerAddress" name="formerAddress" type="text" maxlength="130">
+          </div>
+        </div>
+      </section>
+
+      <div id="formStatus" class="status" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <div class="actionbar">
+    <div class="action-copy">
+      <strong>Uitvoer: een nieuwe .xlsx-kopie</strong>
+      De originele ingebouwde sjabloon wordt nooit overschreven.
+    </div>
+    <div class="actions">
+      <button class="button secondary" type="button" id="resetButton">Leegmaken</button>
+      <button class="button primary" type="submit" form="affiliationForm" id="saveButton">Excel-kopie opslaan</button>
+    </div>
+  </div>
+
+  <p class="footer-note">Deze toepassing werkt online én offline. Persoonsgegevens worden niet verzonden of automatisch blijvend opgeslagen.</p>
+  <script src="assets/js/template.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
