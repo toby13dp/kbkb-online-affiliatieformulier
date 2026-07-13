@@ -1,0 +1,283 @@
+.mobile-signing-start {
+  text-align: center;
+}
+
+.mobile-signing-start .button {
+  min-width: 220px;
+}
+
+.mobile-signing-start p,
+.mobile-wizard-intro p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.signature-wizard-controls {
+  display: grid;
+  grid-template-columns: minmax(110px, auto) minmax(120px, 1fr) minmax(150px, auto);
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.signature-wizard-progress {
+  color: var(--muted);
+  font-size: .84rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.signature-wizard-message {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid #efb5b5;
+  border-radius: 10px;
+  background: #fff4f4;
+  color: #8f1515;
+  font-size: .84rem;
+  font-weight: 700;
+}
+
+.signature-wizard-message.show {
+  display: block;
+}
+
+.signature-canvas-wrap.date {
+  overflow: hidden;
+  border: 1px dotted #303030;
+  background-color: #fff;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(10% - 1px),
+      rgba(25, 25, 25, .72) calc(10% - 1px),
+      rgba(25, 25, 25, .72) 10%
+    );
+}
+
+.signature-canvas-wrap.date::after {
+  content: "DD  -  MM  -  JJJJ";
+  position: absolute;
+  z-index: 1;
+  inset: auto 10px 8px;
+  color: #8d949c;
+  font-size: .7rem;
+  font-weight: 750;
+  letter-spacing: .18em;
+  text-align: center;
+  pointer-events: none;
+}
+
+.signature-canvas-wrap.date > span {
+  display: none;
+}
+
+.signature-orientation-block {
+  display: none;
+}
+
+.mobile-wizard-intro {
+  margin-bottom: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  text-align: center;
+}
+
+.mobile-wizard-intro strong {
+  display: block;
+  font-size: 1rem;
+}
+
+.mobile-wizard-intro .button {
+  width: min(320px, 100%);
+  margin-top: 14px;
+}
+
+.signature-wizard-open {
+  overflow: hidden !important;
+  overscroll-behavior: none;
+}
+
+.signature-wizard-open #inlineSigningPanel {
+  position: fixed;
+  z-index: 1600;
+  inset: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: stretch;
+  width: 100vw;
+  height: 100dvh;
+  margin: 0;
+  padding: max(10px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  overflow: hidden;
+  background: #f0f1f2;
+}
+
+.signature-wizard-open #inlineSigningPanel > .signing-pad-grid,
+.signature-wizard-open #inlineSigningPanel > .guardian-signing {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.signature-wizard-open #inlineSigningPanel .signing-pad-grid {
+  display: contents;
+}
+
+.signature-wizard-open #inlineSigningPanel .guardian-signing-title {
+  display: none;
+}
+
+.signature-wizard-open #inlineSigningPanel .signing-pad-card.is-current-signing-step {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  max-height: calc(100dvh - 84px);
+}
+
+.signature-wizard-open #inlineSigningPanel .signature-canvas-wrap,
+.signature-wizard-open #inlineSigningPanel .signature-canvas-wrap.signature,
+.signature-wizard-open #inlineSigningPanel .signature-canvas-wrap canvas,
+.signature-wizard-open #inlineSigningPanel .signature-canvas-wrap.signature canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.signature-wizard-open #inlineSigningPanel .signature-wizard-controls {
+  margin: 10px 0 0;
+}
+
+.mobile-signature-wizard-open .mobile-signing-page,
+.mobile-signature-wizard-open body {
+  overflow: hidden;
+}
+
+.mobile-signature-wizard-open .mobile-signing-shell {
+  position: fixed;
+  z-index: 1500;
+  inset: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  margin: 0;
+  padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  overflow: hidden;
+  background: #f0f1f2;
+}
+
+.mobile-signature-wizard-open .mobile-signing-header,
+.mobile-signature-wizard-open .mobile-signing-shell > .signing-notice,
+.mobile-signature-wizard-open .mobile-wizard-intro,
+.mobile-signature-wizard-open #mobileGuardianFields > .guardian-signing-title {
+  display: none;
+}
+
+.mobile-signature-wizard-open #mobileSignatureForm {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mobile-signature-wizard-open .mobile-signing-fields,
+.mobile-signature-wizard-open #mobileGuardianFields,
+.mobile-signature-wizard-open #mobileGuardianFields .mobile-signing-fields {
+  display: contents;
+}
+
+.mobile-signature-wizard-open .signing-pad-card.is-current-signing-step {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.mobile-signature-wizard-open .signature-canvas-wrap,
+.mobile-signature-wizard-open .signature-canvas-wrap.signature,
+.mobile-signature-wizard-open .signature-canvas-wrap canvas,
+.mobile-signature-wizard-open .signature-canvas-wrap.signature canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.mobile-signature-wizard-open .mobile-signature-controls {
+  margin: 8px 0 0;
+}
+
+.mobile-signature-wizard-open #mobileSignatureStatus {
+  max-height: 54px;
+  overflow: auto;
+  margin-top: 6px;
+}
+
+@media (orientation: portrait) and (max-width: 900px) {
+  .signature-wizard-open .signature-orientation-block,
+  .mobile-signature-wizard-open .signature-orientation-block {
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 8px;
+    padding: 28px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+  }
+
+  .signature-orientation-block strong {
+    color: var(--brand-yellow);
+    font-size: 1.35rem;
+  }
+
+  .signature-orientation-block span {
+    max-width: 360px;
+    color: #d8d8da;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 720px) {
+  .signature-wizard-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .signature-wizard-progress {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .signature-wizard-controls .button:first-child {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .signature-wizard-controls .button:last-child {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 560px) {
+  .signing-pad-head {
+    padding: 7px 10px;
+  }
+
+  .signature-wizard-controls .button {
+    min-height: 42px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+}
