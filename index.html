@@ -4,20 +4,28 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
-  <meta name="theme-color" content="#20242a">
-  <meta name="description" content="Vul het KBKB-affiliatieformulier veilig in en download lokaal een ingevulde Excel-kopie. Persoonsgegevens verlaten de browser niet.">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Vul het officiële affiliatieformulier van de Belgische Korfbalbond online in en download een PDF met exact dezelfde opmaak als het Excel-formulier.">
   <title>KBKB Online Affiliatieformulier</title>
   <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
   <main class="shell">
-    <header class="hero">
-      <div>
-        <p class="eyebrow">KBKB online affiliatieformulier</p>
-        <h1>Vul het affiliatieformulier in en download een ingevulde Excel-kopie.</h1>
-        <p class="intro">Alle verwerking gebeurt uitsluitend in deze browser. De originele opmaak, beveiliging, afdrukinstellingen en het logo blijven in het Excel-bestand behouden.</p>
+    <header class="brand-hero">
+      <div class="brand-logo-panel">
+        <img class="brand-logo" src="assets/img/korfbal-belgium.svg" alt="Korfbal België">
       </div>
-      <div class="local-badge" title="Er worden geen gegevens geüpload">
+      <div class="brand-copy">
+        <p class="eyebrow">Koninklijke Belgische Korfbalbond</p>
+        <h1>Online affiliatieformulier</h1>
+        <p class="intro">Vul de gegevens digitaal in en download daarna het officiële formulier als PDF. De PDF behoudt exact de opmaak, vakken, juridische tekst en handtekeningzones van het oorspronkelijke Excel-formulier.</p>
+        <div class="brand-pills" aria-label="Kenmerken">
+          <span>Officiële Excel-opmaak</span>
+          <span>Lokale verwerking</span>
+          <span>PDF klaar voor afdruk</span>
+        </div>
+      </div>
+      <div class="local-badge" title="Er worden geen persoonsgegevens geüpload">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
           <path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M12 14v3"/>
         </svg>
@@ -29,7 +37,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
         <circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7.2h.01"/>
       </svg>
-      <div>De velden voor de aansluitingsdatum, het lidnummer, de stempel en de handtekeningen blijven leeg. Die onderdelen zijn volgens het oorspronkelijke formulier bestemd voor het bondssecretariaat of voor handmatige ondertekening.</div>
+      <div><strong>Na de PDF-download:</strong> druk het formulier af en plaats onderaan de vereiste handtekening(en) met pen. De aansluitingsdatum en het lidnummer blijven voorbehouden voor het bondssecretariaat.</div>
     </div>
 
     <form id="affiliationForm" novalidate>
@@ -237,17 +245,19 @@
 
   <div class="actionbar">
     <div class="action-copy">
-      <strong>Uitvoer: een nieuwe .xlsx-kopie</strong>
-      De originele ingebouwde sjabloon wordt nooit overschreven.
+      <strong>Uitvoer: officiële PDF in de originele Excel-opmaak</strong>
+      Daarna afdrukken en onderaan handmatig ondertekenen.
     </div>
     <div class="actions">
       <button class="button secondary" type="button" id="resetButton">Leegmaken</button>
-      <button class="button primary" type="submit" form="affiliationForm" id="saveButton">Excel-kopie opslaan</button>
+      <button class="button primary" type="submit" form="affiliationForm" id="saveButton">Officiële PDF opslaan</button>
     </div>
   </div>
 
-  <p class="footer-note">Deze toepassing werkt online én offline. Persoonsgegevens worden niet verzonden of automatisch blijvend opgeslagen.</p>
-  <script src="assets/js/template.js"></script>
-  <script src="assets/js/app.js"></script>
+  <p class="footer-note">Persoonsgegevens blijven in de browser. De gedownloade PDF moet nog worden afgedrukt en onderaan handmatig worden ondertekend.</p>
+  <script src="assets/js/pdf-template.js"></script>
+  <script src="assets/js/form.js"></script>
+  <script src="assets/js/pdf-exact.js"></script>
+  <script src="assets/js/main.js"></script>
 </body>
 </html>
