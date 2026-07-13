@@ -9,7 +9,7 @@ De toepassing:
 - verstuurt geen formuliergegevens naar GitHub;
 - verstuurt geen formuliergegevens naar De Prins Design of een andere server;
 - bewaart geen formuliergegevens in `localStorage`, `sessionStorage`, cookies of IndexedDB;
-- maakt uitsluitend na een expliciete klik een lokaal downloadbaar Excel-bestand;
+- maakt uitsluitend na een expliciete klik een lokaal downloadbaar PDF-bestand;
 - wist de actuele formulierinhoud wanneer de pagina wordt gesloten, vernieuwd of handmatig leeggemaakt.
 
 ## GitHub Pages
@@ -31,7 +31,11 @@ Het formulier kan onder andere de volgende persoonsgegevens bevatten:
 - gegevens van een wettelijke vertegenwoordiger;
 - informatie over een vorige korfbalclub.
 
-Een ingevulde Excel-kopie moet daarom als vertrouwelijk document worden behandeld. Gebruik beveiligde opslag en een geschikt verzendkanaal.
+Een ingevulde PDF moet daarom als vertrouwelijk document worden behandeld. Gebruik beveiligde opslag en een geschikt verzendkanaal.
+
+## Afdrukken en ondertekenen
+
+De toepassing voegt onderaan de PDF handtekeningvakken toe. De gebruiker moet de PDF na het downloaden afdrukken en de vereiste handtekening(en) met pen plaatsen. Een niet-ondertekende PDF is nog niet volledig afgewerkt.
 
 ## Geen automatische bewaring
 
