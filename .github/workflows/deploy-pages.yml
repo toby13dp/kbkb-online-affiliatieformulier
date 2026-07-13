@@ -26,6 +26,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Validate Python and JavaScript
+        run: |
+          python3 -m py_compile local_server.py scripts/build_site.py
+          for file in assets/js/*.js; do
+            node --check "$file"
+          done
+
       - name: Build static interface
         run: python3 scripts/build_site.py
 
