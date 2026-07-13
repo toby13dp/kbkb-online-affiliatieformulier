@@ -1,5 +1,10 @@
 "use strict";
 
+const kbkbSignatureStyle = document.createElement("link");
+kbkbSignatureStyle.rel = "stylesheet";
+kbkbSignatureStyle.href = "assets/css/signature.css";
+document.head.appendChild(kbkbSignatureStyle);
+
 (function () {
   const SignaturePad = window.KBKBSignaturePad;
   const LinkApi = window.KBKBSignatureLink;
