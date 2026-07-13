@@ -1,12 +1,12 @@
 # KBKB Online Affiliatieformulier
 
-Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de Koninklijke Belgische Korfbalbond invult en als printklare PDF exporteert.
+Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de Koninklijke Belgische Korfbalbond invult en rechtstreeks als printklare PDF downloadt.
 
 ## Belangrijkste kenmerken
 
 - volledig client-side: er is geen backend of database;
 - persoonsgegevens verlaten de browser niet;
-- export naar een overzichtelijke A4-PDF via het afdrukvenster;
+- directe lokale download als een geldig A4-PDF-bestand;
 - validatie van verplichte velden, geboortedatum en Belgisch rijksregisternummer;
 - automatische velden voor een wettelijke vertegenwoordiger bij minderjarigen;
 - aanvullende velden voor een vorige buitenlandse korfbalclub;
@@ -18,10 +18,10 @@ Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de
 
 Na het invullen:
 
-1. Klik op **PDF maken**.
-2. Kies in het afdrukvenster **Opslaan als PDF**.
-3. Bewaar het document.
-4. Druk de opgeslagen PDF af.
+1. Klik op **PDF opslaan**.
+2. De browser downloadt een bestand met de naam `Affiliatie_Naam_Voornaam.pdf`.
+3. Open en controleer de opgeslagen PDF.
+4. Druk de PDF af.
 5. Plaats onderaan de vereiste handtekening(en) met pen.
 
 Een opgeslagen maar niet ondertekende PDF is nog niet volledig afgewerkt.
@@ -44,9 +44,9 @@ Wanneer GitHub Pages nog niet actief is:
 1. Download of clone deze repository.
 2. Open `index.html` in een recente versie van Chrome, Edge of Firefox.
 3. Vul het formulier in.
-4. Klik op **PDF maken**.
-5. Kies **Opslaan als PDF** in het afdrukvenster.
-6. Druk de PDF daarna af en onderteken onderaan.
+4. Klik op **PDF opslaan**.
+5. Open de gedownloade PDF.
+6. Druk de PDF af en onderteken onderaan.
 
 Er is geen installatie, buildstap of internetverbinding nodig.
 
@@ -64,6 +64,7 @@ Er is geen installatie, buildstap of internetverbinding nodig.
 │       ├── app.js
 │       ├── form.js
 │       ├── main.js
+│       ├── pdf-core.js
 │       └── pdf.js
 ├── docs/
 │   ├── PRIVACY.md
@@ -79,12 +80,13 @@ Er is geen installatie, buildstap of internetverbinding nodig.
 De toepassing:
 
 - valideert de invoer volledig in de browser;
-- bouwt een afzonderlijke printklare A4-weergave op;
-- opent automatisch het afdrukvenster;
-- gebruikt de documenttitel als voorstel voor de PDF-bestandsnaam;
+- bouwt zonder externe bibliotheek een geldig PDF 1.4-document op;
+- gebruikt een vaste A4-indeling met vectorlijnen, tekstvelden en handtekeningvakken;
+- downloadt het document via een lokale `Blob`-URL;
+- gebruikt de naam en voornaam als onderdeel van de bestandsnaam;
 - bevat geen externe analytics-, formulier- of opslagdienst.
 
-De gebruiker kiest in het afdrukvenster **Opslaan als PDF**. Hierdoor blijft de oplossing volledig lokaal en werkt ze ook offline.
+De PDF-generator staat in `assets/js/pdf-core.js`. De koppeling tussen formuliervelden en de PDF staat in `assets/js/pdf.js`.
 
 ## Ondersteunde browsers
 
@@ -95,7 +97,7 @@ Gebruik een recente versie van:
 - Mozilla Firefox;
 - een actuele Chromium-browser op Android.
 
-Pop-ups moeten voor de pagina toegestaan zijn, omdat de printklare PDF-weergave in een nieuw venster wordt geopend.
+De browser moet `Blob`, `URL.createObjectURL` en `TextEncoder` ondersteunen. Dit is standaard aanwezig in actuele browsers.
 
 ## Privacy en beveiliging
 
