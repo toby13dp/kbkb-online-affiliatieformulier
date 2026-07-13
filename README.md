@@ -14,7 +14,7 @@ De toepassing tekent de formuliergegevens niet opnieuw op een vooraf gemaakte PD
 6. na een geslaagde export wordt de tijdelijke `.xlsx` expliciet verwijderd;
 7. bij digitale ondertekening worden de handgeschreven lijnen daarna op de voorziene plaatsen in de PDF gezet.
 
-Daardoor blijven de bestaande Excelopmaak, vakken, teksten, logo’s, pagina-instellingen en handtekeningzones behouden.
+Daardoor blijven de bestaande Excelopmaak, vakken, teksten, logo’s, pagina-instellingen en handtekeningzones behouden. De XLSX-patcher is afzonderlijk getest: de aangepaste werkmap blijft geldig en LibreOffice exporteert ze als één officiële A4-pagina.
 
 ## Ondertekeningskeuze
 
@@ -29,7 +29,7 @@ De PDF wordt zonder handtekening opgeslagen. De toepassing meldt duidelijk dat h
 De volgende gegevens worden als eigenhandig getekende lijnen opgenomen:
 
 - gemeente in het veld **Te**;
-- datum in het veld **de**;
+- datum in het datumvak na **de**;
 - handtekening van de aanvrager onder de datum;
 - volledige naam van de aanvrager onder de handtekening.
 
@@ -40,6 +40,8 @@ Wanneer de aanvrager jonger is dan 18 jaar worden drie extra tekenvelden verplic
 - volledige naam van de wettelijke vertegenwoordiger.
 
 Deze drie tekeningen worden onder elkaar geplaatst onder de officiële tekst over de wettelijke vertegenwoordiger.
+
+De functie legt een grafische handtekening vast. Dit is niet automatisch een gekwalificeerde elektronische handtekening; de ontvangende organisatie bepaalt of deze vorm voor haar procedure volstaat.
 
 ## Werking per toestel
 
@@ -90,13 +92,13 @@ chmod +x start-macos-linux.sh
 Of rechtstreeks:
 
 ```bash
-python3 local_server.py
+python3 run_local.py
 ```
 
 Een andere poort gebruiken:
 
 ```bash
-python3 local_server.py --port 9000
+python3 run_local.py --port 9000
 ```
 
 Een afwijkend LibreOffice-programma instellen:
@@ -125,7 +127,7 @@ De publieke interface wordt gepubliceerd op:
 https://toby13dp.github.io/kbkb-online-affiliatieformulier/
 ```
 
-GitHub Pages is statische hosting en kan geen lokaal geïnstalleerde LibreOffice-versie starten. De exacte Excel-naar-PDF-export en de lokale QR-overdracht werken daarom via `local_server.py`. Op de Pages-versie verschijnt bij export een duidelijke instructie om de lokale toepassing te starten.
+GitHub Pages is statische hosting en kan geen lokaal geïnstalleerde LibreOffice-versie starten. De exacte Excel-naar-PDF-export en de lokale QR-overdracht werken daarom via `run_local.py`. Op de Pages-versie verschijnt bij export een duidelijke instructie om de lokale toepassing te starten.
 
 ## Projectstructuur
 
@@ -155,9 +157,13 @@ GitHub Pages is statische hosting en kan geen lokaal geïnstalleerde LibreOffice
 ├── index.html
 ├── sign.html
 ├── local_server.py
+├── run_local.py
+├── xlsx_patch.py
 ├── start-windows.bat
 └── start-macos-linux.sh
 ```
+
+`run_local.py` start de HTTP-server en koppelt daar de afzonderlijk gevalideerde `xlsx_patch.py` aan.
 
 ## Privacy
 
