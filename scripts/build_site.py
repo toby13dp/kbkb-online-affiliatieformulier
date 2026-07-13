@@ -26,6 +26,7 @@ JS_FILES = (
     "signature-crypto.js",
     "signature-flow.js",
     "signature-mobile.js",
+    "signing-copy.js",
     "pdf-signature.js",
     "pdf-export.js",
     "main.js",
