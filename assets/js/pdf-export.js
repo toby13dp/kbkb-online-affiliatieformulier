@@ -1,6 +1,11 @@
 "use strict";
 
 (function () {
+  function apiUrl(path) {
+    const base = String(window.KBKB_API_BASE || "").replace(/\/$/, "");
+    return `${base}${path}`;
+  }
+
   function safeFilenamePart(value) {
     return String(value || "")
       .normalize("NFKD")
@@ -17,9 +22,9 @@
     return payload.error || `PDF-export mislukt (${response.status}).`;
   }
 
-  async function verifyLocalService() {
+  async function verifyExportService() {
     try {
-      const response = await fetch("/api/status", { cache: "no-store" });
+      const response = await fetch(apiUrl("/api/status"), { cache: "no-store" });
       if (!response.ok) return null;
       return await response.json();
     } catch {
@@ -28,20 +33,20 @@
   }
 
   async function exportOfficialPdf(signingResult) {
-    const service = await verifyLocalService();
+    const service = await verifyExportService();
     if (!service?.local_server) {
       throw new Error(
-        "De exacte Excel-naar-PDF-export werkt alleen via de lokale toepassing. " +
-        "Start start-windows.bat of voer ‘python run_local.py’ uit en open het formulier vanuit dat venster."
+        "Er is geen actieve Excel-naar-PDF-service geconfigureerd. " +
+        "Start lokaal via start-windows.bat, of configureer voor GitHub Pages de repositoryvariabele KBKB_API_BASE met de URL van de permanente backend."
       );
     }
     if (!service.exact_excel_export) {
       throw new Error(
-        "LibreOffice Calc is niet gevonden. Installeer LibreOffice en start de lokale toepassing opnieuw."
+        "LibreOffice Calc is niet beschikbaar op de exportservice. Controleer de backendinstallatie."
       );
     }
 
-    const response = await fetch("/api/export", {
+    const response = await fetch(apiUrl("/api/export"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
@@ -72,5 +77,5 @@
   }
 
   window.exportOfficialPdf = exportOfficialPdf;
-  window.checkKbkbLocalService = verifyLocalService;
+  window.checkKbkbExportService = verifyExportService;
 })();
