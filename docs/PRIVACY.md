@@ -1,26 +1,24 @@
 # Privacy en gegevensverwerking
 
-## Verwerking in de browser
+## Lokale verwerking
 
-Het KBKB Online Affiliatieformulier verwerkt alle ingevoerde gegevens lokaal in het browsergeheugen. Er is geen backend, database, analytics-script of externe formulierdienst aanwezig.
+Alle ingevoerde gegevens worden uitsluitend in het geheugen van de browser verwerkt.
 
 De toepassing:
 
-- verstuurt geen formuliergegevens naar GitHub;
-- verstuurt geen formuliergegevens naar De Prins Design of een andere server;
-- bewaart geen formuliergegevens in `localStorage`, `sessionStorage`, cookies of IndexedDB;
-- maakt uitsluitend na een expliciete klik een lokaal downloadbaar PDF-bestand;
-- wist de actuele formulierinhoud wanneer de pagina wordt gesloten, vernieuwd of handmatig leeggemaakt.
+- verstuurt geen formuliergegevens naar GitHub of een andere server;
+- gebruikt geen backend, database, analytics of externe formulierdienst;
+- bewaart geen formuliergegevens in cookies, `localStorage`, `sessionStorage` of IndexedDB;
+- maakt alleen na een expliciete klik een lokaal downloadbaar PDF-bestand;
+- wist de actuele invoer wanneer de pagina wordt gesloten, vernieuwd of leeggemaakt.
 
 ## GitHub Pages
 
-Bij gebruik via GitHub Pages levert GitHub alleen de statische bestanden van de toepassing aan de browser. De ingevulde veldwaarden worden door de applicatiecode niet naar GitHub teruggestuurd.
+GitHub Pages levert alleen de statische webbestanden. De ingevulde waarden worden niet teruggestuurd naar GitHub. GitHub kan wel technische toegangslogs verwerken die losstaan van de inhoud van het formulier.
 
-GitHub kan voor de levering van de website technische serverlogs verwerken, zoals een IP-adres, browsertype en tijdstip. Dit staat los van de inhoud die in het formulier wordt ingevuld.
+## Gevoelige persoonsgegevens
 
-## Gevoelige gegevens
-
-Het formulier kan onder andere de volgende persoonsgegevens bevatten:
+De PDF kan onder andere bevatten:
 
 - naam en voornaam;
 - geboortedatum;
@@ -31,12 +29,8 @@ Het formulier kan onder andere de volgende persoonsgegevens bevatten:
 - gegevens van een wettelijke vertegenwoordiger;
 - informatie over een vorige korfbalclub.
 
-Een ingevulde PDF moet daarom als vertrouwelijk document worden behandeld. Gebruik beveiligde opslag en een geschikt verzendkanaal.
+Behandel de gedownloade en afgedrukte PDF daarom als een vertrouwelijk document.
 
 ## Afdrukken en ondertekenen
 
-De toepassing voegt onderaan de PDF handtekeningvakken toe. De gebruiker moet de PDF na het downloaden afdrukken en de vereiste handtekening(en) met pen plaatsen. Een niet-ondertekende PDF is nog niet volledig afgewerkt.
-
-## Geen automatische bewaring
-
-De toepassing bevat bewust geen conceptopslag. Dit verkleint het risico dat gevoelige persoonsgegevens langdurig op een gedeeld toestel achterblijven.
+De PDF bevat de oorspronkelijke handtekeningzones van het officiële formulier. Na de download moet het document worden afgedrukt en onderaan met pen worden ondertekend. Een niet-ondertekende PDF is nog niet volledig afgewerkt.
