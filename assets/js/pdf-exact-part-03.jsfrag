@@ -1,0 +1,131 @@
+][1]);
+  const trailerIndex = pdfText.lastIndexOf("trailer", previousXref);
+  const trailerText = trailerIndex >= 0 ? pdfText.slice(trailerIndex, pdfText.indexOf("startxref", trailerIndex)) : pdfText.slice(-3000);
+  const size = Number((trailerText.match(/\/Size\s+(\d+)/) || [])[1]);
+  const root = (trailerText.match(/\/Root\s+(\d+)\s+(\d+)\s+R/) || []);
+  const info = (trailerText.match(/\/Info\s+(\d+)\s+(\d+)\s+R/) || []);
+  const id = (trailerText.match(/\/ID\s*\[\s*(<[^>]+>)\s*(<[^>]+>)\s*\]/s) || []);
+  if (!size || !root[1]) throw new Error("De officiële PDF-template heeft onverwachte documentstructuur.");
+  return {
+    previousXref,
+    size,
+    root: `${root[1]} ${root[2]} R`,
+    info: info[1] ? `${info[1]} ${info[2]} R` : "",
+    id: id[1] ? `[ ${id[1]} ${id[2]} ]` : ""
+  };
+}
+
+function kbkbExtractObject(pdfText, objectId) {
+  const pattern = new RegExp(`(?:^|\\n)${objectId}\\s+0\\s+obj\\s*([\\s\\S]*?)\\s*endobj`);
+  const match = pattern.exec(pdfText);
+  if (!match) throw new Error(`Object ${objectId} ontbreekt in de officiële PDF-template.`);
+  return match[1].trim();
+}
+
+function kbkbGenerateExactPdf(values) {
+  if (!window.KBKB_EXACT_PDF_TEMPLATE_BASE64) throw new Error("De officiële PDF-template is niet geladen.");
+  const originalBytes = kbkbBase64ToBytes(window.KBKB_EXACT_PDF_TEMPLATE_BASE64);
+  const originalText = kbkbLatin1(originalBytes);
+  const trailer = kbkbExtractTrailerInfo(originalText);
+
+  const pageObjectId = 1;
+  const fontDictionaryObjectId = 3422;
+  const overlayObjectId = trailer.size;
+  const regularFontObjectId = trailer.size + 1;
+  const boldFontObjectId = trailer.size + 2;
+
+  const commands = ["q"];
+  for (const [key, field] of Object.entries(KBKB_PDF_FIELDS)) {
+    const command = kbkbTextCommand(values[key], field);
+    if (command) commands.push(command);
+  }
+  commands.push("Q");
+  const stream = commands.join("\n");
+  const streamLength = new TextEncoder().encode(stream).length;
+
+  let pageBody = kbkbExtractObject(originalText, pageObjectId);
+  if (/\/Contents\s+\d+\s+\d+\s+R/.test(pageBody)) {
+    pageBody = pageBody.replace(/\/Contents\s+(\d+\s+\d+\s+R)/, `/Contents[$1 ${overlayObjectId} 0 R]`);
+  } else if (/\/Contents\s*\[/.test(pageBody)) {
+    pageBody = pageBody.replace(/\/Contents\s*\[/, `/Contents[${overlayObjectId} 0 R `);
+  } else {
+    throw new Error("De inhoudsverwijzing van de officiële PDF-template werd niet herkend.");
+  }
+
+  let fontBody = kbkbExtractObject(originalText, fontDictionaryObjectId);
+  fontBody = fontBody.replace(/>>\s*$/, `/F4 ${regularFontObjectId} 0 R/F5 ${boldFontObjectId} 0 R>>`);
+
+  const objects = [
+    { id: pageObjectId, body: pageBody },
+    { id: fontDictionaryObjectId, body: fontBody },
+    { id: overlayObjectId, body: `<< /Length ${streamLength} >>\nstream\n${stream}\nendstream` },
+    { id: regularFontObjectId, body: "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>" },
+    { id: boldFontObjectId, body: "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>" }
+  ].sort((a, b) => a.id - b.id);
+
+  const encoder = new TextEncoder();
+  const appendChunks = [encoder.encode("\n")];
+  const offsets = new Map();
+  let offset = originalBytes.length + 1;
+  for (const object of objects) {
+    const bytes = encoder.encode(`${object.id} 0 obj\n${object.body}\nendobj\n`);
+    offsets.set(object.id, offset);
+    appendChunks.push(bytes);
+    offset += bytes.length;
+  }
+
+  const xrefOffset = offset;
+  const groups = [];
+  for (const object of objects) {
+    const last = groups[groups.length - 1];
+    if (last && object.id === last.ids[last.ids.length - 1] + 1) last.ids.push(object.id);
+    else groups.push({ ids: [object.id] });
+  }
+  let xref = "xref\n";
+  for (const group of groups) {
+    xref += `${group.ids[0]} ${group.ids.length}\n`;
+    for (const id of group.ids) xref += `${String(offsets.get(id)).padStart(10, "0")} 00000 n \n`;
+  }
+  const infoPart = trailer.info ? `/Info ${trailer.info}` : "";
+  const idPart = trailer.id ? `/ID ${trailer.id}` : "";
+  const newSize = boldFontObjectId + 1;
+  const tail = `trailer\n<< /Size ${newSize} /Root ${trailer.root} ${infoPart} ${idPart} /Prev ${trailer.previousXref} >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+  appendChunks.push(encoder.encode(xref + tail));
+  return kbkbConcatBytes([originalBytes, ...appendChunks]);
+}
+
+function kbkbSafeFilenamePart(value) {
+  return String(value || "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[<>:\"/\\|?*\x00-\x1F]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/_+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 50) || "onbekend";
+}
+
+function downloadAffiliationPdf() {
+  const values = kbkbBuildPdfValues();
+  const bytes = kbkbGenerateExactPdf(values);
+  const filename = `Affiliatie_${kbkbSafeFilenamePart(kbkbFormValue("lastName"))}_${kbkbSafeFilenamePart(kbkbFormValue("firstName"))}.pdf`;
+  const blob = new Blob([bytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.style.display = "none";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+  return filename;
+}
+
+function configureKbkbBranding() {
+  document.title = "Belgische Korfbalbond - Online affiliatieformulier";
+  const description = document.querySelector('meta[name="description"]');
+  if (description) description.content = "Vul het officiële affiliatieformulier van de Belgische Korfbalbond online in en download een PDF met exact dezelfde opmaak als het Excel-formulier.";
+}
+
+configureKbkbBranding();
