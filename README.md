@@ -31,7 +31,7 @@ Een gedownloade maar niet ondertekende PDF is nog niet volledig afgewerkt.
 
 ## GitHub Pages
 
-De Pages-workflow bouwt eerst de officiële PDF-template uit het oorspronkelijke Excelbestand en publiceert daarna de statische site.
+De Pages-workflow downloadt de door KBKB gedeelde Excelbron, controleert de vaste SHA-256, bouwt daaruit de officiële PDF-template en publiceert daarna de statische site. De meegeleverde tekstchunks blijven beschikbaar als gecontroleerde fallback voor een lokale build.
 
 Na een succesvolle deployment is de toepassing beschikbaar op:
 
@@ -44,7 +44,8 @@ GitHub Pages moet bij **Settings → Pages → Build and deployment** op **GitHu
 Vereisten:
 
 - Python 3;
-- LibreOffice Calc.
+- LibreOffice Calc;
+- internettoegang tot de gedeelde Excelbron, tenzij de repositoryfallback geldig is.
 
 Bouw de site met:
 
@@ -58,7 +59,7 @@ Open daarna:
 _site/index.html
 ```
 
-De build reconstrueert het logo, de PDF-exportcode en het officiële Excelbestand uit opgesplitste tekstbestanden. Vervolgens worden onder meer deze bestanden gemaakt:
+De build reconstrueert het logo en de PDF-exportcode uit opgesplitste tekstbestanden. Vervolgens worden onder meer deze bestanden gemaakt:
 
 ```text
 _site/assets/img/korfbal-belgium.webp
@@ -96,7 +97,7 @@ _site/assets/templates/4322_Affiliatieformulier_PC.pdf
 
 ## Technische werking
 
-1. `scripts/build_site.py` reconstrueert het originele `.xlsx`-bestand.
+1. `scripts/build_site.py` laadt het exacte originele `.xlsx`-bestand en controleert SHA-256 `7247a8dc44c6d79099918cfedc0be6e8238c231c7a4c1543168152ebaf7477cf`.
 2. LibreOffice Calc exporteert het werkblad naar één officiële A4-PDF.
 3. Die PDF wordt als Base64 opgenomen in de Pages-build.
 4. De browser voegt alleen de ingevulde waarden toe via een incrementele PDF-update.
