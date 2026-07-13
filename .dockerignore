@@ -1,0 +1,10 @@
+.git
+.github
+_site
+.runtime
+__pycache__
+*.pyc
+*.log
+Affiliatie_*.pdf
+Affiliatie_tijdelijk.xlsx
+Affiliatie_tijdelijk.pdf
