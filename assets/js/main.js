@@ -12,13 +12,13 @@ form.addEventListener("submit", event => {
   saveButton.disabled = true;
   resetButton.disabled = true;
   const originalLabel = saveButton.textContent;
-  saveButton.textContent = "PDF wordt opgebouwd…";
+  saveButton.textContent = "Officiële PDF wordt opgebouwd…";
 
   try {
     const filename = downloadAffiliationPdf();
     showStatus(
       "success",
-      `De PDF is opgeslagen als ${filename}. Druk dit bestand nu af en onderteken onderaan met pen.`
+      `De PDF is opgeslagen als ${filename}. Druk dit bestand af en onderteken het onderaan met pen voordat je het bezorgt.`
     );
   } catch (error) {
     console.error(error);
