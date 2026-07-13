@@ -6,13 +6,13 @@
   // Coördinaten in PDF-punten, gemeten op de rechtstreeks door LibreOffice
   // geëxporteerde officiële A4-pagina (595,304 × 841,89 pt).
   const SIGNATURE_RECTS = {
-    place: { x: 44, top: 513, width: 145, height: 16, lineWidth: 1.05 },
-    date: { x: 54, top: 535, width: 105, height: 14, lineWidth: 1.0 },
-    signature: { x: 24, top: 550, width: 205, height: 31, lineWidth: 1.2 },
-    name: { x: 24, top: 583, width: 205, height: 15, lineWidth: 0.95 },
-    guardianAgreement: { x: 24, top: 638, width: 205, height: 18, lineWidth: 0.95 },
-    guardianSignature: { x: 24, top: 660, width: 205, height: 70, lineWidth: 1.2 },
-    guardianName: { x: 24, top: 734, width: 205, height: 18, lineWidth: 0.95 }
+    place: { x: 52, top: 598, width: 166, height: 16, lineWidth: 1.05 },
+    date: { x: 62, top: 622, width: 120, height: 14, lineWidth: 1.0 },
+    signature: { x: 28, top: 640, width: 210, height: 32, lineWidth: 1.2 },
+    name: { x: 28, top: 674, width: 210, height: 14, lineWidth: 0.95 },
+    guardianAgreement: { x: 28, top: 724, width: 350, height: 16, lineWidth: 0.95 },
+    guardianSignature: { x: 28, top: 743, width: 350, height: 34, lineWidth: 1.2 },
+    guardianName: { x: 28, top: 780, width: 350, height: 15, lineWidth: 0.95 }
   };
 
   function latin1(bytes) {
