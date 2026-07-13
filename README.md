@@ -1,8 +1,8 @@
-# Belgische Korfbalbond - Online affiliatieformulier
+# Belgische Korfbalbond – Online affiliatieformulier
 
-Een statische, Nederlandstalige webtoepassing waarmee een gebruiker het officiële affiliatieformulier digitaal invult en als PDF downloadt.
+Een statische Nederlandstalige webtoepassing waarmee een gebruiker het officiële affiliatieformulier digitaal invult en als PDF downloadt.
 
-De PDF gebruikt **de rechtstreeks uit het oorspronkelijke Excel-bestand geëxporteerde pagina als vaste template**. Daardoor blijven de originele opmaak, vakken, juridische tekst, KBKB-identiteit, contactgegevens en handtekeningzones visueel ongewijzigd.
+De PDF gebruikt **de rechtstreeks uit het oorspronkelijke Excelbestand geëxporteerde pagina als vaste template**. Daardoor blijven de originele opmaak, vakken, juridische tekst, KBKB-identiteit, contactgegevens en handtekeningzones visueel ongewijzigd.
 
 ## Belangrijkste kenmerken
 
@@ -58,9 +58,11 @@ Open daarna:
 _site/index.html
 ```
 
-De build maakt uit `template/4322_Affiliatieformulier_PC.xlsx.b64` onder meer:
+De build reconstrueert het logo, de PDF-exportcode en het officiële Excelbestand uit opgesplitste tekstbestanden. Vervolgens worden onder meer deze bestanden gemaakt:
 
 ```text
+_site/assets/img/korfbal-belgium.webp
+_site/assets/js/pdf-exact.js
 _site/assets/js/pdf-template.js
 _site/assets/templates/4322_Affiliatieformulier_PC.pdf
 ```
@@ -69,26 +71,32 @@ _site/assets/templates/4322_Affiliatieformulier_PC.pdf
 
 ```text
 .
-├── .github/workflows/deploy-pages.yml
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml
 ├── assets/
-│   ├── css/styles.css
-│   ├── img/korfbal-belgium.svg
+│   ├── css/
+│   │   └── styles.css
+│   ├── img/
+│   │   └── logo-part-*.b64
 │   └── js/
 │       ├── form.js
 │       ├── main.js
-│       └── pdf-exact.js
+│       └── pdf-exact-part-*.jsfrag
 ├── docs/
 │   ├── PRIVACY.md
 │   └── VELDENMAPPING.md
-├── scripts/build_site.py
-├── template/4322_Affiliatieformulier_PC.xlsx.b64
+├── scripts/
+│   └── build_site.py
+├── template/
+│   └── source-part-*.b64
 ├── index.html
 └── README.md
 ```
 
 ## Technische werking
 
-1. `scripts/build_site.py` decodeert het originele `.xlsx`-bestand.
+1. `scripts/build_site.py` reconstrueert het originele `.xlsx`-bestand.
 2. LibreOffice Calc exporteert het werkblad naar één officiële A4-PDF.
 3. Die PDF wordt als Base64 opgenomen in de Pages-build.
 4. De browser voegt alleen de ingevulde waarden toe via een incrementele PDF-update.
