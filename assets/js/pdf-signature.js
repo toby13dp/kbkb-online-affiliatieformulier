@@ -3,14 +3,16 @@
 (function () {
   const encoder = new TextEncoder();
 
+  // Coördinaten in PDF-punten, gemeten op de rechtstreeks door LibreOffice
+  // geëxporteerde officiële A4-pagina (595,304 × 841,89 pt).
   const SIGNATURE_RECTS = {
-    place: { x: 132, top: 625, width: 320, height: 22, lineWidth: 1.1 },
-    date: { x: 160, top: 655, width: 225, height: 22, lineWidth: 1.05 },
-    signature: { x: 132, top: 678, width: 330, height: 36, lineWidth: 1.25 },
-    name: { x: 132, top: 715, width: 330, height: 15, lineWidth: 1.0 },
-    guardianAgreement: { x: 132, top: 777, width: 330, height: 15, lineWidth: 1.0 },
-    guardianSignature: { x: 132, top: 795, width: 330, height: 24, lineWidth: 1.2 },
-    guardianName: { x: 132, top: 821, width: 330, height: 14, lineWidth: 1.0 }
+    place: { x: 44, top: 513, width: 145, height: 16, lineWidth: 1.05 },
+    date: { x: 54, top: 535, width: 105, height: 14, lineWidth: 1.0 },
+    signature: { x: 24, top: 550, width: 205, height: 31, lineWidth: 1.2 },
+    name: { x: 24, top: 583, width: 205, height: 15, lineWidth: 0.95 },
+    guardianAgreement: { x: 24, top: 638, width: 205, height: 18, lineWidth: 0.95 },
+    guardianSignature: { x: 24, top: 660, width: 205, height: 70, lineWidth: 1.2 },
+    guardianName: { x: 24, top: 734, width: 205, height: 18, lineWidth: 0.95 }
   };
 
   function latin1(bytes) {
@@ -68,7 +70,7 @@
 
   function mediaBox(pageBody) {
     const match = pageBody.match(/\/MediaBox\s*\[\s*([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)\s+([\d.+-]+)\s*\]/);
-    if (!match) return { width: 595.276, height: 841.89 };
+    if (!match) return { width: 595.304, height: 841.89 };
     return {
       width: Number(match[3]) - Number(match[1]),
       height: Number(match[4]) - Number(match[2])
