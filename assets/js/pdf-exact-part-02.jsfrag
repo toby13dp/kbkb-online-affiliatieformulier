@@ -1,0 +1,99 @@
+ align: "right", maxWidth: 215, size: 8 },
+  nationality: { anchor: 168.77, bottom: 203.29, align: "right", maxWidth: 135, size: 8 },
+  birthDay: { anchor: 199.115, bottom: 203.29, align: "center", maxWidth: 20, size: 8 },
+  birthMonth: { anchor: 234.745, bottom: 203.29, align: "center", maxWidth: 20, size: 8 },
+  birthYear: { anchor: 274.955, bottom: 203.29, align: "center", maxWidth: 42, size: 8 },
+  rrn1: { anchor: 360.82, bottom: 203.93, align: "left", maxWidth: 68, size: 8 },
+  rrn2: { anchor: 443.96, bottom: 203.93, align: "left", maxWidth: 33, size: 8 },
+  rrn3: { anchor: 494.62, bottom: 203.93, align: "left", maxWidth: 25, size: 8 },
+  street: { anchor: 311.30, bottom: 236.26, align: "right", maxWidth: 280, size: 8 },
+  houseNumber: { anchor: 348.94, bottom: 236.26, align: "left", maxWidth: 43, size: 8 },
+  box: { anchor: 443.96, bottom: 236.26, align: "left", maxWidth: 32, size: 8 },
+  postalCode: { anchor: 75.77, bottom: 251.99, align: "left", maxWidth: 43, size: 8 },
+  municipality: { anchor: 242.05, bottom: 251.99, align: "left", maxWidth: 276, size: 8 },
+  genderFemale: { anchor: 33.195, bottom: 283.46, align: "center", maxWidth: 12, size: 8, bold: true },
+  genderMale: { anchor: 104.455, bottom: 283.46, align: "center", maxWidth: 12, size: 8, bold: true },
+  previousClub: { anchor: 370.475, bottom: 283.46, align: "center", maxWidth: 296, size: 8 },
+  guardianName: { anchor: 522.65, bottom: 316.42, align: "right", maxWidth: 370, size: 8 },
+  guardianBirthDay: { anchor: 127.85, bottom: 332.15, align: "center", maxWidth: 20, size: 8 },
+  guardianBirthMonth: { anchor: 163.485, bottom: 332.15, align: "center", maxWidth: 20, size: 8 },
+  guardianBirthYear: { anchor: 203.685, bottom: 332.15, align: "center", maxWidth: 42, size: 8 },
+  guardianNationality: { anchor: 522.65, bottom: 332.15, align: "right", maxWidth: 170, size: 8 },
+  guardianStreet: { anchor: 346.93, bottom: 347.89, align: "right", maxWidth: 263, size: 8 },
+  guardianHouseNumber: { anchor: 420.92, bottom: 347.89, align: "left", maxWidth: 42, size: 8 },
+  guardianBox: { anchor: 522.66, bottom: 347.89, align: "right", maxWidth: 40, size: 8 },
+  guardianPostalCode: { anchor: 98.495, bottom: 363.62, align: "center", maxWidth: 43, size: 8 },
+  guardianMunicipality: { anchor: 522.65, bottom: 363.62, align: "right", maxWidth: 288, size: 8 },
+  guardianRelationship: { anchor: 522.65, bottom: 379.35, align: "right", maxWidth: 312, size: 8 },
+  foreignMunicipality: { anchor: 111.40, bottom: 428.05, align: "left", maxWidth: 256, size: 8 },
+  foreignCountry: { anchor: 111.40, bottom: 443.78, align: "left", maxWidth: 256, size: 8 },
+  foreignClubName: { anchor: 111.40, bottom: 461.75, align: "left", maxWidth: 256, size: 8 },
+  formerAddress: { anchor: 28.26, bottom: 494.62, align: "left", maxWidth: 488, size: 8 }
+};
+
+function kbkbDateParts(isoDate) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDate || "");
+  return match ? { year: match[1], month: match[2], day: match[3] } : { year: "", month: "", day: "" };
+}
+
+function kbkbFormValue(name) {
+  const field = form.elements.namedItem(name);
+  if (!field) return "";
+  if (field instanceof RadioNodeList) return field.value || "";
+  if (field.type === "checkbox") return field.checked;
+  return String(field.value || "").trim();
+}
+
+function kbkbBuildPdfValues() {
+  const birth = kbkbDateParts(kbkbFormValue("birthDate"));
+  const guardianBirth = kbkbDateParts(kbkbFormValue("guardianBirthDate"));
+  const rrn = normalizeNationalNumber(kbkbFormValue("nationalNumber"));
+  const type = kbkbFormValue("affiliationType");
+  const gender = kbkbFormValue("gender");
+  const minor = isMinor(kbkbFormValue("birthDate"));
+  const foreign = Boolean(kbkbFormValue("previousClubForeign"));
+  return {
+    affiliationCompetition: type === "competition" ? "X" : "",
+    affiliationRecreant: type === "recreant" ? "X" : "",
+    affiliationAdherent: type === "adherent" ? "X" : "",
+    affiliationOccasional: type === "occasional" ? "X" : "",
+    club: kbkbFormValue("club"),
+    lastName: kbkbFormValue("lastName"),
+    firstName: kbkbFormValue("firstName"),
+    nationality: kbkbFormValue("nationality"),
+    birthDay: birth.day,
+    birthMonth: birth.month,
+    birthYear: birth.year,
+    rrn1: rrn.slice(0, 6),
+    rrn2: rrn.slice(6, 9),
+    rrn3: rrn.slice(9, 11),
+    street: kbkbFormValue("street"),
+    houseNumber: kbkbFormValue("houseNumber"),
+    box: kbkbFormValue("box"),
+    postalCode: kbkbFormValue("postalCode"),
+    municipality: kbkbFormValue("municipality"),
+    genderFemale: gender === "female" ? "X" : "",
+    genderMale: gender === "male" ? "X" : "",
+    previousClub: kbkbFormValue("previousClub"),
+    guardianName: minor ? kbkbFormValue("guardianName") : "",
+    guardianBirthDay: minor ? guardianBirth.day : "",
+    guardianBirthMonth: minor ? guardianBirth.month : "",
+    guardianBirthYear: minor ? guardianBirth.year : "",
+    guardianNationality: minor ? kbkbFormValue("guardianNationality") : "",
+    guardianStreet: minor ? kbkbFormValue("guardianStreet") : "",
+    guardianHouseNumber: minor ? kbkbFormValue("guardianHouseNumber") : "",
+    guardianBox: minor ? kbkbFormValue("guardianBox") : "",
+    guardianPostalCode: minor ? kbkbFormValue("guardianPostalCode") : "",
+    guardianMunicipality: minor ? kbkbFormValue("guardianMunicipality") : "",
+    guardianRelationship: minor ? kbkbFormValue("guardianRelationship") : "",
+    foreignMunicipality: foreign ? kbkbFormValue("foreignMunicipality") : "",
+    foreignCountry: foreign ? kbkbFormValue("foreignCountry") : "",
+    foreignClubName: foreign ? kbkbFormValue("foreignClubName") : "",
+    formerAddress: foreign ? kbkbFormValue("formerAddress") : ""
+  };
+}
+
+function kbkbExtractTrailerInfo(pdfText) {
+  const startMatches = [...pdfText.matchAll(/startxref\s+(\d+)\s+%%EOF/g)];
+  if (!startMatches.length) throw new Error("De officiële PDF-template heeft geen geldige xref-verwijzing.");
+  const previousXref = Number(startMatches[startMatches.length - 1
