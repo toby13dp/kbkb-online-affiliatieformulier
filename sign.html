@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+  <meta name="theme-color" content="#000000">
+  <meta name="robots" content="noindex,nofollow">
+  <title>KBKB – Mobiel ondertekenen</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body class="mobile-signing-page">
+  <main class="mobile-signing-shell">
+    <header class="mobile-signing-header">
+      <img src="assets/img/korfbal-belgium.webp" alt="Korfbal België">
+      <div>
+        <p class="eyebrow">Digitale ondertekening</p>
+        <h1>Schrijf de velden met vinger of stylus</h1>
+        <p>De tekeningen worden na verzending op de voorziene plaatsen onderaan links in het officiële formulier gezet.</p>
+      </div>
+    </header>
+
+    <div class="signing-notice signing-notice-digital">
+      <strong>Blijf op hetzelfde lokale netwerk.</strong>
+      Verstuur pas wanneer alle velden duidelijk zijn ingevuld. De tijdelijke sessie vervalt automatisch.
+    </div>
+
+    <form id="mobileSignatureForm" novalidate>
+      <section class="mobile-signing-fields">
+        <div class="signing-pad-card compact">
+          <div class="signing-pad-head"><strong>Gemeente – veld “Te”</strong><button type="button" data-clear-pad="place">Wissen</button></div>
+          <div class="signature-canvas-wrap place"><canvas data-kbkb-pad="place" aria-label="Schrijf de gemeente"></canvas><span>Schrijf de gemeente</span></div>
+        </div>
+        <div class="signing-pad-card compact">
+          <div class="signing-pad-head"><strong>Datum – veld “de”</strong><button type="button" data-clear-pad="date">Wissen</button></div>
+          <div class="signature-canvas-wrap date"><canvas data-kbkb-pad="date" aria-label="Schrijf de datum"></canvas><span>DD-MM-JJJJ</span></div>
+        </div>
+        <div class="signing-pad-card wide signature">
+          <div class="signing-pad-head"><strong>Handtekening aanvrager</strong><button type="button" data-clear-pad="signature">Wissen</button></div>
+          <div class="signature-canvas-wrap signature"><canvas data-kbkb-pad="signature" aria-label="Plaats de handtekening"></canvas><span>Onderteken binnen dit vlak</span></div>
+        </div>
+        <div class="signing-pad-card wide">
+          <div class="signing-pad-head"><strong>Volledige naam aanvrager</strong><button type="button" data-clear-pad="name">Wissen</button></div>
+          <div class="signature-canvas-wrap name"><canvas data-kbkb-pad="name" aria-label="Schrijf de volledige naam"></canvas><span>Schrijf de volledige naam</span></div>
+        </div>
+      </section>
+
+      <section id="mobileGuardianFields" class="mobile-guardian-fields" hidden>
+        <div class="guardian-signing-title">
+          <strong>Wettelijke vertegenwoordiger</strong>
+          <span>Omdat de aanvrager jonger is dan 18 jaar zijn ook deze drie eigenhandig geschreven velden verplicht.</span>
+        </div>
+        <div class="mobile-signing-fields">
+          <div class="signing-pad-card wide">
+            <div class="signing-pad-head"><strong>“Gezien voor akkoord”</strong><button type="button" data-clear-pad="guardianAgreement">Wissen</button></div>
+            <div class="signature-canvas-wrap guardianAgreement"><canvas data-kbkb-pad="guardianAgreement" aria-label="Schrijf Gezien voor akkoord"></canvas><span>Schrijf eigenhandig: Gezien voor akkoord</span></div>
+          </div>
+          <div class="signing-pad-card wide signature">
+            <div class="signing-pad-head"><strong>Handtekening wettelijke vertegenwoordiger</strong><button type="button" data-clear-pad="guardianSignature">Wissen</button></div>
+            <div class="signature-canvas-wrap signature"><canvas data-kbkb-pad="guardianSignature" aria-label="Handtekening wettelijke vertegenwoordiger"></canvas><span>Plaats de handtekening</span></div>
+          </div>
+          <div class="signing-pad-card wide">
+            <div class="signing-pad-head"><strong>Volledige naam wettelijke vertegenwoordiger</strong><button type="button" data-clear-pad="guardianName">Wissen</button></div>
+            <div class="signature-canvas-wrap name"><canvas data-kbkb-pad="guardianName" aria-label="Naam wettelijke vertegenwoordiger"></canvas><span>Schrijf de volledige naam</span></div>
+          </div>
+        </div>
+      </section>
+
+      <div id="mobileSignatureStatus" class="status" role="status" aria-live="polite"></div>
+      <button class="button primary mobile-send-button" type="submit" id="sendSignatureButton">Verzenden naar computer</button>
+    </form>
+  </main>
+
+  <script src="assets/js/signature-pad.js"></script>
+  <script src="assets/js/signature-crypto.js"></script>
+  <script src="assets/js/signature-mobile.js"></script>
+</body>
+</html>
