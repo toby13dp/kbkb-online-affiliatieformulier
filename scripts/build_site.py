@@ -19,7 +19,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
-SOURCE_B64 = ROOT / "template" / "4322_Affiliatieformulier_PC.xlsx.b64"
+SOURCE_PARTS = sorted((ROOT / "template").glob("source-part-*.b64"))
+LOGO_PARTS = sorted((ROOT / "assets" / "img").glob("logo-part-*.b64"))
+PDF_JS_PARTS = sorted((ROOT / "assets" / "js").glob("pdf-exact-part-*.jsfrag"))
 
 
 def find_libreoffice() -> str:
@@ -43,13 +45,32 @@ def copy_static_files() -> None:
     shutil.copy2(ROOT / "index.html", OUTPUT / "index.html")
     shutil.copy2(ROOT / ".nojekyll", OUTPUT / ".nojekyll")
     shutil.copy2(ROOT / "assets" / "css" / "styles.css", OUTPUT / "assets" / "css" / "styles.css")
-    shutil.copy2(ROOT / "assets" / "img" / "korfbal-belgium.svg", OUTPUT / "assets" / "img" / "korfbal-belgium.svg")
-    for filename in ("form.js", "pdf-exact.js", "main.js"):
+    if not LOGO_PARTS:
+        raise RuntimeError("De Korfbal België-logochunks ontbreken.")
+    logo_data = base64.b64decode(
+        "".join(path.read_text(encoding="utf-8").strip() for path in LOGO_PARTS),
+        validate=True,
+    )
+    if not logo_data.startswith(b"RIFF") or b"WEBP" not in logo_data[:16]:
+        raise RuntimeError("Het ingebouwde Korfbal België-logo is ongeldig.")
+    (OUTPUT / "assets" / "img" / "korfbal-belgium.webp").write_bytes(logo_data)
+
+    if not PDF_JS_PARTS:
+        raise RuntimeError("De exacte PDF-exportcode ontbreekt.")
+    pdf_js = "".join(path.read_text(encoding="utf-8") for path in PDF_JS_PARTS)
+    (OUTPUT / "assets" / "js" / "pdf-exact.js").write_text(pdf_js, encoding="utf-8")
+
+    for filename in ("form.js", "main.js"):
         shutil.copy2(ROOT / "assets" / "js" / filename, OUTPUT / "assets" / "js" / filename)
 
 
 def build_pdf_template() -> tuple[Path, str]:
-    source_bytes = base64.b64decode(SOURCE_B64.read_text(encoding="utf-8").strip(), validate=True)
+    if not SOURCE_PARTS:
+        raise RuntimeError("De ingebouwde Excel-template ontbreekt.")
+    encoded_source = "".join(
+        path.read_text(encoding="utf-8").strip() for path in SOURCE_PARTS
+    )
+    source_bytes = base64.b64decode(encoded_source, validate=True)
     if not source_bytes.startswith(b"PK"):
         raise RuntimeError("De ingebouwde Excel-template is ongeldig.")
 
