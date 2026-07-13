@@ -6,4 +6,7 @@ __pycache__/
 *.pyc
 *.log
 _site/
+.runtime/
 Affiliatie_*.pdf
+Affiliatie_tijdelijk.xlsx
+Affiliatie_tijdelijk.pdf
