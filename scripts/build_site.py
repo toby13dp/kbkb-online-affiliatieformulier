@@ -27,6 +27,7 @@ JS_FILES = (
     "pdf-exact.js",
     "signature-pad.js",
     "signature-pad-registry.js",
+    "signature-zoom.js",
     "signature-crypto.js",
     "signature-flow.js",
     "signature-wizard.js",
