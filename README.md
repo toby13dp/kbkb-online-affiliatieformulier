@@ -31,7 +31,7 @@ Een gedownloade maar niet ondertekende PDF is nog niet volledig afgewerkt.
 
 ## GitHub Pages
 
-De Pages-workflow downloadt de door KBKB gedeelde Excelbron, controleert de vaste SHA-256, bouwt daaruit de officiële PDF-template en publiceert daarna de statische site. De meegeleverde tekstchunks blijven beschikbaar als gecontroleerde fallback voor een lokale build.
+De Pages-workflow downloadt de door KBKB gedeelde Excelbron, controleert de vaste SHA-256, bouwt daaruit de officiële PDF-template en publiceert daarna de statische site.
 
 Na een succesvolle deployment is de toepassing beschikbaar op:
 
@@ -45,7 +45,7 @@ Vereisten:
 
 - Python 3;
 - LibreOffice Calc;
-- internettoegang tot de gedeelde Excelbron, tenzij de repositoryfallback geldig is.
+- internettoegang tot de door KBKB gedeelde Excelbron.
 
 Bouw de site met:
 
@@ -89,15 +89,13 @@ _site/assets/templates/4322_Affiliatieformulier_PC.pdf
 │   └── VELDENMAPPING.md
 ├── scripts/
 │   └── build_site.py
-├── template/
-│   └── source-part-*.b64
 ├── index.html
 └── README.md
 ```
 
 ## Technische werking
 
-1. `scripts/build_site.py` laadt het exacte originele `.xlsx`-bestand en controleert SHA-256 `7247a8dc44c6d79099918cfedc0be6e8238c231c7a4c1543168152ebaf7477cf`.
+1. `scripts/build_site.py` downloadt het exacte originele `.xlsx`-bestand en controleert SHA-256 `7247a8dc44c6d79099918cfedc0be6e8238c231c7a4c1543168152ebaf7477cf`.
 2. LibreOffice Calc exporteert het werkblad naar één officiële A4-PDF.
 3. Die PDF wordt als Base64 opgenomen in de Pages-build.
 4. De browser voegt alleen de ingevulde waarden toe via een incrementele PDF-update.
