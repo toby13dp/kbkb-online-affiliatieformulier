@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build the static GitHub Pages interface.
 
-GitHub Pages can display the form and mobile signing page, but the exact runtime
-Excel-to-PDF conversion is deliberately performed only by local_server.py on the
-user's own device. No workbook or personal form data is processed in CI.
+GitHub Pages can display the form and signing interfaces, but the exact runtime
+Excel-to-PDF conversion is deliberately performed by the separately deployed or
+local Python service. No workbook or personal form data is processed in Pages CI.
 """
 
 from __future__ import annotations
@@ -17,14 +17,16 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
 LOGO_PARTS = sorted((ROOT / "assets" / "img").glob("logo-part-*.b64"))
 
-CSS_FILES = ("styles.css", "signature.css")
+CSS_FILES = ("styles.css", "signature.css", "signature-wizard.css")
 JS_FILES = (
     "form.js",
     "pdf-template.js",
     "pdf-exact.js",
     "signature-pad.js",
+    "signature-pad-registry.js",
     "signature-crypto.js",
     "signature-flow.js",
+    "signature-wizard.js",
     "signature-mobile.js",
     "signing-copy.js",
     "pdf-signature.js",
@@ -71,7 +73,7 @@ def build() -> None:
 def main() -> int:
     build()
     print(f"Statische interface gebouwd in: {OUTPUT}")
-    print("Exacte Excel-naar-PDF-export: lokaal via local_server.py")
+    print("Exacte Excel-naar-PDF-export vereist een permanente Python/LibreOffice-service.")
     return 0
 
 
