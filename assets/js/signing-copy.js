@@ -4,6 +4,11 @@
   const notice = document.querySelector(".notice div");
   const actionCopy = document.querySelector(".action-copy");
   const footer = document.querySelector(".footer-note");
+  const sessionNote = document.querySelector(".signing-security-note");
+
+  if (sessionNote) {
+    sessionNote.textContent = "De tijdelijke tekengegevens blijven maximaal 30 minuten in het geheugen van de lokale server. Gebruik een vertrouwd lokaal netwerk.";
+  }
 
   function selectedMethod() {
     return form.elements.namedItem("signingMethod")?.value || "";
@@ -12,8 +17,8 @@
   function updateCopy() {
     const method = selectedMethod();
     if (method === "digital") {
-      if (notice) notice.innerHTML = "<strong>Digitale ondertekening gekozen:</strong> voltooi de tekenvelden. De tekeningen worden onderaan links in de officiële PDF geplaatst; afdrukken is niet nodig.";
-      if (actionCopy) actionCopy.innerHTML = "<strong>Uitvoer: officieel Excel-formulier als digitaal ondertekende PDF</strong> De tijdelijke Excelkopie wordt na de geslaagde PDF-export verwijderd.";
+      if (notice) notice.innerHTML = "<strong>Digitale ondertekening gekozen:</strong> klik in stap 5 op Ondertekenen en voltooi de tekenvelden één voor één. Afdrukken is daarna niet nodig.";
+      if (actionCopy) actionCopy.innerHTML = "<strong>Uitvoer: officieel Excel-formulier als digitaal ondertekende PDF</strong> Alle tekenvelden moeten voltooid zijn; de tijdelijke Excelkopie wordt na de geslaagde PDF-export verwijderd.";
       if (footer) footer.textContent = "Formuliergegevens worden lokaal verwerkt. Digitale tekeningen worden rechtstreeks in de PDF geplaatst.";
       return;
     }
