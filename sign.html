@@ -7,6 +7,8 @@
   <meta name="robots" content="noindex,nofollow">
   <title>KBKB – Mobiel ondertekenen</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/signature.css">
+  <link rel="stylesheet" href="assets/css/signature-wizard.css">
 </head>
 <body class="mobile-signing-page">
   <main class="mobile-signing-shell">
@@ -20,8 +22,8 @@
     </header>
 
     <div class="signing-notice signing-notice-digital">
-      <strong>Blijf op hetzelfde lokale netwerk.</strong>
-      Verstuur pas wanneer alle velden duidelijk zijn ingevuld. De tijdelijke sessie vervalt automatisch.
+      <strong>Blijf op hetzelfde vertrouwde netwerk.</strong>
+      De velden worden één voor één in liggende stand getoond. De tijdelijke sessie vervalt na 30 minuten.
     </div>
 
     <form id="mobileSignatureForm" novalidate>
@@ -32,7 +34,7 @@
         </div>
         <div class="signing-pad-card compact">
           <div class="signing-pad-head"><strong>Datum – veld “de”</strong><button type="button" data-clear-pad="date">Wissen</button></div>
-          <div class="signature-canvas-wrap date"><canvas data-kbkb-pad="date" aria-label="Schrijf de datum"></canvas><span>DD-MM-JJJJ</span></div>
+          <div class="signature-canvas-wrap date"><canvas data-kbkb-pad="date" aria-label="Schrijf de datum in de zichtbare Excelcellen"></canvas><span>DD-MM-JJJJ</span></div>
         </div>
         <div class="signing-pad-card wide signature">
           <div class="signing-pad-head"><strong>Handtekening aanvrager</strong><button type="button" data-clear-pad="signature">Wissen</button></div>
@@ -66,11 +68,12 @@
       </section>
 
       <div id="mobileSignatureStatus" class="status" role="status" aria-live="polite"></div>
-      <button class="button primary mobile-send-button" type="submit" id="sendSignatureButton">Verzenden naar computer</button>
+      <button class="button primary mobile-send-button" type="submit" id="sendSignatureButton" hidden>Terug naar formulier op computer</button>
     </form>
   </main>
 
   <script src="assets/js/signature-pad.js"></script>
+  <script src="assets/js/signature-pad-registry.js"></script>
   <script src="assets/js/signature-crypto.js"></script>
   <script src="assets/js/signature-mobile.js"></script>
 </body>
