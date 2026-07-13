@@ -8,6 +8,7 @@
   );
   if (!isMobileDevice) return;
 
+  const ZoomApi = window.KBKBSignatureZoom;
   const inlinePanel = document.getElementById("inlineSigningPanel");
   const digitalNotice = document.getElementById("digitalSigningNotice");
   const guardianSection = document.getElementById("inlineGuardianSigning");
@@ -18,7 +19,7 @@
   startWrap.hidden = true;
   startWrap.innerHTML = `
     <button type="button" class="button primary" id="startInlineSigningButton">Ondertekenen</button>
-    <p>De tekenvelden worden één voor één in liggende stand geopend.</p>`;
+    <p>De tekenvelden worden één voor één in liggende stand geopend. De tekenwizard wordt tijdelijk op 50% weergegeven.</p>`;
   digitalNotice.insertAdjacentElement("afterend", startWrap);
 
   const controls = document.createElement("div");
@@ -102,7 +103,7 @@
     previousButton.disabled = index === 0;
     nextButton.textContent = index === steps.length - 1 ? "Terug naar formulier" : "Volgende";
     progress.textContent = `Veld ${index + 1} van ${steps.length}`;
-    window.setTimeout(() => currentPad()?.resize(), 60);
+    window.setTimeout(() => currentPad()?.resize(), 80);
   }
 
   function showWizardMessage(message) {
@@ -128,9 +129,11 @@
     inlinePanel.hidden = false;
     document.documentElement.classList.add("signature-wizard-open");
     document.body.classList.add("signature-wizard-open");
+    ZoomApi?.forceFiftyPercent?.(inlinePanel);
     clearWizardMessage();
     renderStep();
     await requestLandscape();
+    window.setTimeout(() => currentPad()?.resize(), 140);
   }
 
   async function closeWizard() {
@@ -141,6 +144,7 @@
     steps.forEach(card => { card.hidden = false; });
     clearWizardMessage();
     await releaseLandscape();
+    ZoomApi?.restorePrevious?.(inlinePanel);
     document.getElementById("signatureSection")?.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
@@ -185,8 +189,16 @@
     }
   });
 
+  inlinePanel.addEventListener("kbkbzoomchange", () => {
+    if (active) window.setTimeout(() => currentPad()?.resize(), 80);
+  });
+
   window.addEventListener("orientationchange", () => {
     if (active) window.setTimeout(() => currentPad()?.resize(), 180);
+  });
+
+  window.addEventListener("pagehide", () => {
+    ZoomApi?.restorePrevious?.(inlinePanel);
   });
 
   syncVisibility();
