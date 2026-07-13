@@ -2,13 +2,16 @@
 """Build the static GitHub Pages interface.
 
 GitHub Pages can display the form and signing interfaces, but the exact runtime
-Excel-to-PDF conversion is deliberately performed by the separately deployed or
-local Python service. No workbook or personal form data is processed in Pages CI.
+Excel-to-PDF conversion is performed by a separately deployed or local
+Python/LibreOffice service. No workbook or personal form data is processed in
+Pages CI.
 """
 
 from __future__ import annotations
 
 import base64
+import json
+import os
 import shutil
 import sys
 from pathlib import Path
@@ -35,6 +38,13 @@ JS_FILES = (
 )
 
 
+def normalized_api_base() -> str:
+    value = os.environ.get("KBKB_API_BASE", "").strip().rstrip("/")
+    if value and not value.startswith("https://"):
+        raise RuntimeError("KBKB_API_BASE moet leeg zijn of met https:// beginnen.")
+    return value
+
+
 def build() -> None:
     if OUTPUT.exists():
         shutil.rmtree(OUTPUT)
@@ -56,6 +66,16 @@ def build() -> None:
     for filename in JS_FILES:
         shutil.copy2(ROOT / "assets" / "js" / filename, OUTPUT / "assets" / "js" / filename)
 
+    api_base = normalized_api_base()
+    runtime_config = (
+        '"use strict";\n'
+        f"window.KBKB_API_BASE = {json.dumps(api_base)};\n"
+    )
+    (OUTPUT / "assets" / "js" / "runtime-config.js").write_text(
+        runtime_config,
+        encoding="utf-8",
+    )
+
     for filename in ("PRIVACY.md", "VELDENMAPPING.md"):
         shutil.copy2(ROOT / "docs" / filename, OUTPUT / "docs" / filename)
 
@@ -73,7 +93,7 @@ def build() -> None:
 def main() -> int:
     build()
     print(f"Statische interface gebouwd in: {OUTPUT}")
-    print("Exacte Excel-naar-PDF-export vereist een permanente Python/LibreOffice-service.")
+    print(f"Backend: {normalized_api_base() or 'zelfde oorsprong / lokaal'}")
     return 0
 
 
