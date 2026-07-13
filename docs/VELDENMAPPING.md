@@ -1,67 +1,53 @@
-# Veldmapping naar het Excel-sjabloon
+# Veldmapping naar de PDF-uitvoer
 
-De toepassing schrijft gegevens naar `xl/worksheets/sheet1.xml` in het ingebouwde `.xlsx`-sjabloon.
+De toepassing neemt de gevalideerde formuliergegevens over in een lokaal opgebouwd PDF 1.4-document. De PDF wordt volledig in de browser gegenereerd.
 
-## Type aansluiting
+## Aanvraag
 
-| Formulierveld | Excel-cel | Waarde |
-|---|---:|---|
-| Competitiespeler | `I8` | `X` |
-| Recreant | `T8` | `X` |
-| Adherent | `AA8` | `X` |
-| Occasioneel korfballer | `AH8` | `X` |
+| Formulierveld | PDF-onderdeel |
+|---|---|
+| Affiliatievorm | Sectie **Aanvraag** — veld **Affiliatie als** |
+| Vereniging | Sectie **Aanvraag** — veld **Vereniging** |
 
 ## Aanvrager
 
-| Formulierveld | Excel-cel |
-|---|---:|
-| Vereniging | `I11` |
-| Naam | `B15` |
-| Voornaam | `Y15` |
-| Nationaliteit | `B19` |
-| Geboortedag | `P19` |
-| Geboortemaand | `S19` |
-| Geboortejaar | `V19` |
-| Rijksregisternummer — eerste 6 cijfers | `AD19` |
-| Rijksregisternummer — volgende 3 cijfers | `AK19` |
-| Rijksregisternummer — controlecijfers | `AO19` |
-| Straat | `B23` |
-| Huisnummer | `AC23` |
-| Bus | `AK23` |
-| Postcode | `F25` |
-| Gemeente | `T25` |
-| Geslacht vrouw | `B29` |
-| Geslacht man | `H29` |
-| Vorige korfbalclub | `R29` |
+| Formulierveld | PDF-onderdeel |
+|---|---|
+| Naam | Sectie **Gegevens van de aanvrager** — veld **Naam** |
+| Voornaam | Sectie **Gegevens van de aanvrager** — veld **Voornaam** |
+| Nationaliteit | Veld **Nationaliteit** |
+| Geboortedatum | Veld **Geboortedatum**, weergegeven als `dd/mm/jjjj` |
+| Rijksregisternummer | Veld **Rijksregisternummer**, met opgemaakte scheidingstekens |
+| Straat, nummer en bus | Samengevoegd in veld **Adres** |
+| Postcode en gemeente | Samengevoegd in veld **Postcode en gemeente** |
+| Geslacht | Veld **Geslacht** |
+| Vorige korfbalclub | Veld **Vorige korfbalclub** |
 
 ## Wettelijke vertegenwoordiger
 
-Deze velden worden alleen ingevuld wanneer de aanvrager jonger dan 18 jaar is.
+Deze sectie wordt alleen toegevoegd wanneer de aanvrager op basis van de geboortedatum jonger dan 18 jaar is.
 
-| Formulierveld | Excel-cel |
-|---|---:|
-| Naam en voornaam | `L33` |
-| Geboortedag | `J35` |
-| Geboortemaand | `M35` |
-| Geboortejaar | `P35` |
-| Nationaliteit | `AC35` |
-| Straat | `E37` |
-| Huisnummer | `AF37` |
-| Bus | `AN37` |
-| Postcode | `F39` |
-| Gemeente | `S39` |
-| Verwantschap | `Q41` |
+| Formulierveld | PDF-onderdeel |
+|---|---|
+| Naam en voornaam | Veld **Naam en voornaam** |
+| Geboortedatum | Veld **Geboortedatum** |
+| Nationaliteit | Veld **Nationaliteit** |
+| Straat, nummer en bus | Samengevoegd in veld **Adres** |
+| Postcode en gemeente | Samengevoegd in veld **Postcode en gemeente** |
+| Verwantschap | Veld **Verwantschap** |
+
+De PDF bevat voor een minderjarige ook een apart handtekeningvak voor de wettelijke vertegenwoordiger met de vermelding **Voorafgegaan door “Gezien voor akkoord”**.
 
 ## Vorige buitenlandse club
 
-Deze velden worden alleen ingevuld wanneer de optie voor een vorige buitenlandse club is geselecteerd.
+Deze sectie wordt alleen toegevoegd wanneer de optie **De vorige club was in het buitenland** is geselecteerd.
 
-| Formulierveld | Excel-cel |
-|---|---:|
-| Gemeente | `I47` |
-| Land | `I49` |
-| Naam vorige club | `I51` |
-| Toenmalig adres | `B55` |
+| Formulierveld | PDF-onderdeel |
+|---|---|
+| Naam vorige club | Veld **Naam vorige club** |
+| Vestigingsgemeente | Veld **Vestigingsgemeente** |
+| Land | Veld **Land** |
+| Toenmalig adres | Veld **Toenmalig adres aanvrager** |
 
 ## Niet digitaal ingevulde onderdelen
 
@@ -69,6 +55,12 @@ De volgende onderdelen blijven bewust leeg voor verdere administratieve of handm
 
 - datum aansluiting;
 - lidnummer;
+- plaats van ondertekening;
+- datum van ondertekening;
 - handtekening van de aanvrager;
-- handtekening van de wettelijke vertegenwoordiger;
+- handtekening van de wettelijke vertegenwoordiger indien van toepassing;
 - stempel en handtekening van de clubsecretaris.
+
+## Verplichte vervolgstap
+
+De PDF bevat een opvallende melding dat het document na de download moet worden afgedrukt. De vereiste handtekeningen moeten onderaan met pen worden geplaatst. Een niet-ondertekende PDF is nog niet volledig afgewerkt.
