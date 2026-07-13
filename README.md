@@ -1,177 +1,174 @@
 # Belgische Korfbalbond – Online affiliatieformulier
 
-Nederlandstalige toepassing voor het invullen van het officiële affiliatieformulier van de Belgische Korfbalbond, met correcte Excel-naar-PDF-export en optionele handgeschreven digitale ondertekening.
+Nederlandstalige toepassing voor het invullen van het officiële affiliatieformulier van de Belgische Korfbalbond, met exacte Excel-naar-PDF-export en optionele handgeschreven digitale ondertekening.
 
-## Correcte PDF-export
+## Exacte Excel-naar-PDF-export
 
-De toepassing tekent de formuliergegevens niet opnieuw op een vooraf gemaakte PDF. Bij iedere export gebeurt lokaal het volgende:
+De toepassing tekent de gewone formuliergegevens niet opnieuw op een vooraf gemaakte PDF. Bij iedere export gebeurt het volgende:
 
 1. het officiële Excelbestand wordt als bron geladen en met SHA-256 gecontroleerd;
-2. er wordt in een tijdelijke map een nieuwe kopie van het officiële Excelbestand gemaakt;
+2. in een tijdelijke map wordt een kopie van het officiële `.xlsx`-bestand gemaakt;
 3. uitsluitend de officiële formuliercellen worden in die tijdelijke kopie ingevuld;
-4. LibreOffice Calc exporteert die ingevulde Excelkopie naar PDF;
+4. LibreOffice Calc exporteert de ingevulde Excelkopie naar één A4-PDF;
 5. de PDF wordt volledig ingelezen;
-6. na een geslaagde export wordt de tijdelijke `.xlsx` expliciet verwijderd;
-7. bij digitale ondertekening worden de handgeschreven lijnen daarna op de voorziene plaatsen in de PDF gezet.
+6. na een geslaagde export wordt de tijdelijke Excelkopie expliciet verwijderd;
+7. bij digitale ondertekening worden de handgeschreven lijnen daarna als vectorpaden op de voorziene plaatsen in de PDF gezet.
 
-Daardoor blijven de bestaande Excelopmaak, vakken, teksten, logo’s, pagina-instellingen en handtekeningzones behouden. De XLSX-patcher is afzonderlijk getest: de aangepaste werkmap blijft geldig en LibreOffice exporteert ze als één officiële A4-pagina.
+Daardoor blijven de bestaande Excelopmaak, vakken, teksten, logo’s, pagina-instellingen en handtekeningzones behouden.
 
-## Ondertekeningskeuze
+## Ondertekeningskeuze als laatste stap
 
-Stap 5 van het formulier staat onmiddellijk voor de knoppen **Leegmaken** en **Officiële PDF opslaan**.
+Stap 5 staat onmiddellijk voor **Leegmaken** en **Officiële PDF opslaan**.
 
 ### Niet digitaal ondertekenen
 
-De PDF wordt zonder handtekening opgeslagen. De toepassing meldt duidelijk dat het document eerst moet worden afgedrukt en onderaan links met pen moet worden ondertekend.
+De PDF wordt zonder digitale handtekening opgeslagen. De toepassing meldt dat het document daarna moet worden afgedrukt en onderaan links met pen moet worden ondertekend.
 
 ### Wel digitaal ondertekenen
 
-De volgende gegevens worden als eigenhandig getekende lijnen opgenomen:
+Er verschijnt eerst de knop **Ondertekenen**. De tekenvelden worden daarna één voor één in liggende stand getoond. **Volgende** wordt pas gebruikt nadat het huidige veld is ingevuld. Bij het laatste veld verschijnt **Terug naar formulier** of **Terug naar formulier op computer**.
+
+De volgende tekenvelden zijn verplicht:
 
 - gemeente in het veld **Te**;
-- datum in het datumvak na **de**;
-- handtekening van de aanvrager onder de datum;
-- volledige naam van de aanvrager onder de handtekening.
+- datum in het vak na **de**;
+- handtekening van de aanvrager;
+- volledige naam van de aanvrager.
 
-Wanneer de aanvrager jonger is dan 18 jaar worden drie extra tekenvelden verplicht:
+Het datumveld toont de zichtbare celverdeling van het officiële Excelvak zodat de datumcijfers in afzonderlijke vakken kunnen worden geschreven.
+
+Wanneer de aanvrager jonger is dan 18 jaar worden ook deze velden verplicht:
 
 - eigenhandig geschreven **Gezien voor akkoord**;
 - handtekening van de wettelijke vertegenwoordiger;
 - volledige naam van de wettelijke vertegenwoordiger.
 
-Deze drie tekeningen worden onder elkaar geplaatst onder de officiële tekst over de wettelijke vertegenwoordiger.
+Deze drie tekeningen worden onder elkaar geplaatst in de officiële zone voor de wettelijke vertegenwoordiger.
 
 De functie legt een grafische handtekening vast. Dit is niet automatisch een gekwalificeerde elektronische handtekening; de ontvangende organisatie bepaalt of deze vorm voor haar procedure volstaat.
 
 ## Werking per toestel
 
-### Mobiel toestel
+### Mobiel formulier
 
-De tekenvelden verschijnen rechtstreeks als onderdeel van het formulier. Tekenen kan met een vinger of stylus.
+Na **Ondertekenen** opent een schermvullende tekenwizard. De browser probeert liggende schermstand en fullscreen te activeren. Wanneer een browser geen programmatische oriëntatievergrendeling toestaat, blokkeert de wizard in portretstand en vraagt hij het toestel horizontaal te draaien.
 
 ### Desktop of laptop
 
-Er verschijnt een popup met:
+Bij digitale ondertekening verschijnt een popup met:
 
-- een QR-code;
-- een lokale URL;
-- de verbindingsstatus.
+- QR-code;
+- URL voor het mobiele toestel;
+- verbindingsstatus.
 
-Na het scannen opent op het mobiele toestel een aparte pagina die uitsluitend de tekenvelden en de knop **Verzenden naar computer** bevat. De computer ontvangt de tekenlijnen en toont een voorbeeld voordat de PDF wordt opgeslagen.
+Na het scannen opent een aparte mobiele pagina met de tekenvelden één voor één. De laatste knop verzendt de tekeningen naar het geopende formulier op de computer. De tijdelijke sessie blijft maximaal **30 minuten** in het servergeheugen.
 
-Beide toestellen moeten op hetzelfde vertrouwde lokale netwerk zitten. Een tijdelijke ondertekeningssessie wordt alleen in het geheugen van de lokale server bewaard en vervalt na 15 minuten.
-
-## Windows starten
+## Lokaal starten
 
 Vereisten:
 
 - Python 3;
 - LibreOffice Calc.
 
-Start daarna:
+Windows:
 
 ```text
 start-windows.bat
 ```
 
-De toepassing opent automatisch in de browser op:
-
-```text
-http://127.0.0.1:8765/
-```
-
-Bij de eerste netwerktoegang kan Windows Firewall vragen of Python toegang tot het privénetwerk mag krijgen. Sta dit toe om de QR-koppeling met een mobiel toestel te gebruiken.
-
-## macOS of Linux starten
+macOS of Linux:
 
 ```bash
 chmod +x start-macos-linux.sh
 ./start-macos-linux.sh
 ```
 
-Of rechtstreeks:
+Rechtstreeks:
 
 ```bash
 python3 run_local.py
 ```
 
-Een andere poort gebruiken:
-
-```bash
-python3 run_local.py --port 9000
-```
-
-Een afwijkend LibreOffice-programma instellen:
+De toepassing opent standaard op:
 
 ```text
-LIBREOFFICE_PATH=/pad/naar/soffice
+http://127.0.0.1:8765/
 ```
 
-Een lokaal officieel Excelbestand instellen:
+Voor de QR-koppeling moeten computer en mobiel toestel op hetzelfde vertrouwde netwerk zitten. Windows Firewall kan vragen om Python toegang tot het privénetwerk te geven.
 
-```text
-KBKB_TEMPLATE_PATH=/pad/naar/4322_Affiliatieformulier_PC.xlsx
-```
+## GitHub Pages met online backend
 
-Het Excelbestand wordt alleen geaccepteerd wanneer de SHA-256 overeenkomt met:
-
-```text
-7247a8dc44c6d79099918cfedc0be6e8238c231c7a4c1543168152ebaf7477cf
-```
-
-## GitHub Pages
-
-De publieke interface wordt gepubliceerd op:
+GitHub Pages publiceert de statische interface op:
 
 ```text
 https://toby13dp.github.io/kbkb-online-affiliatieformulier/
 ```
 
-GitHub Pages is statische hosting en kan geen lokaal geïnstalleerde LibreOffice-versie starten. De exacte Excel-naar-PDF-export en de lokale QR-overdracht werken daarom via `run_local.py`. Op de Pages-versie verschijnt bij export een duidelijke instructie om de lokale toepassing te starten.
+GitHub Pages kan zelf geen Pythonproces of LibreOffice uitvoeren. GitHub Actions kan een backend bouwen en implementeren, maar een workflow-run is geen permanente webserver. Daarom bestaat de online architectuur uit twee delen:
 
-## Projectstructuur
+1. **GitHub Pages** voor de interface;
+2. **een permanente containerhost** voor `hosted_server.py` en LibreOffice.
+
+De workflow `.github/workflows/publish-backend-image.yml` bouwt en publiceert de backendcontainer naar:
+
+```text
+ghcr.io/toby13dp/kbkb-affiliatie-backend:latest
+```
+
+De container verwacht onder meer:
+
+```text
+KBKB_FRONTEND_URL=https://toby13dp.github.io/kbkb-online-affiliatieformulier
+PORT=8765
+```
+
+Na deployment van de container moet in GitHub bij **Settings → Secrets and variables → Actions → Variables** deze repositoryvariabele worden ingesteld:
+
+```text
+KBKB_API_BASE=https://jouw-backend-domein.example
+```
+
+De Pages-workflow neemt die waarde op in `assets/js/runtime-config.js`. Daarna gebruikt de Pages-versie dezelfde Excel-export- en ondertekenings-API als de lokale toepassing.
+
+Een GitHub-token mag nooit in de publieke Pages-JavaScriptcode worden geplaatst om `workflow_dispatch` te starten. Zonder permanente containerhost kan de online export niet veilig en betrouwbaar werken.
+
+## Belangrijkste bestanden
 
 ```text
 .
-├── .github/workflows/deploy-pages.yml
+├── .github/workflows/
+│   ├── deploy-pages.yml
+│   └── publish-backend-image.yml
 ├── assets/
 │   ├── css/
 │   │   ├── styles.css
-│   │   └── signature.css
-│   ├── img/
-│   │   └── logo-part-*.b64
+│   │   ├── signature.css
+│   │   └── signature-wizard.css
 │   └── js/
-│       ├── form.js
-│       ├── main.js
-│       ├── pdf-export.js
-│       ├── pdf-signature.js
-│       ├── signature-crypto.js
+│       ├── runtime-config.js
 │       ├── signature-flow.js
+│       ├── signature-wizard.js
 │       ├── signature-mobile.js
 │       ├── signature-pad.js
-│       └── signing-copy.js
-├── docs/
-│   ├── PRIVACY.md
-│   └── VELDENMAPPING.md
-├── scripts/build_site.py
-├── index.html
-├── sign.html
+│       ├── signature-pad-registry.js
+│       ├── pdf-export.js
+│       └── pdf-signature.js
+├── Dockerfile
+├── hosted_server.py
 ├── local_server.py
 ├── run_local.py
 ├── xlsx_patch.py
-├── start-windows.bat
-└── start-macos-linux.sh
+├── index.html
+└── sign.html
 ```
-
-`run_local.py` start de HTTP-server en koppelt daar de afzonderlijk gevalideerde `xlsx_patch.py` aan.
 
 ## Privacy
 
-- formuliergegevens worden alleen naar de lokale server op hetzelfde toestel verstuurd;
-- de tijdelijke Excelkopie staat uitsluitend in een tijdelijke systeemmap;
+- tijdelijke Excelkopieën staan uitsluitend in een tijdelijke systeemmap;
 - de tijdelijke Excelkopie wordt na succesvolle PDF-export verwijderd;
-- digitale tekeningen worden bij een desktopkoppeling alleen tijdelijk in het servergeheugen bewaard;
-- er is geen database, account, analytics of externe formulieropslag;
-- de QR-codebibliotheek wordt via jsDelivr geladen; er worden daarbij geen formulier- of tekengegevens naar de CDN gestuurd.
+- ondertekeningssessies blijven maximaal 30 minuten in het servergeheugen;
+- gebruik voor online hosting HTTPS en één vaste backendinstantie;
+- er is geen database, analytics of afzonderlijke opslag van handtekeningafbeeldingen.
 
 Zie [docs/PRIVACY.md](docs/PRIVACY.md) voor de volledige technische toelichting.
