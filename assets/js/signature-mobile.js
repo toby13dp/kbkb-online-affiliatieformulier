@@ -8,8 +8,10 @@ document.head.appendChild(kbkbSignatureStyle);
 (function () {
   const SignaturePad = window.KBKBSignaturePad;
   const LinkApi = window.KBKBSignatureLink;
+  const ZoomApi = window.KBKBSignatureZoom;
   const session = LinkApi?.parseSessionFragment();
   const form = document.getElementById("mobileSignatureForm");
+  const signingShell = document.querySelector(".mobile-signing-shell");
   const guardianFields = document.getElementById("mobileGuardianFields");
   const statusBox = document.getElementById("mobileSignatureStatus");
   const sendButton = document.getElementById("sendSignatureButton");
@@ -20,7 +22,7 @@ document.head.appendChild(kbkbSignatureStyle);
     statusBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
-  if (!SignaturePad || !LinkApi || !session) {
+  if (!SignaturePad || !LinkApi || !session || !signingShell) {
     showStatus("error", "Deze ondertekeningslink is ongeldig of onvolledig. Scan de QR-code opnieuw.");
     sendButton.disabled = true;
     return;
@@ -66,7 +68,7 @@ document.head.appendChild(kbkbSignatureStyle);
   intro.className = "mobile-wizard-intro";
   intro.innerHTML = `
     <strong>Ondertekenen in liggende stand</strong>
-    <p>De ${steps.length} tekenvelden worden één voor één getoond. Vul ieder veld volledig in voordat je verdergaat.</p>
+    <p>De ${steps.length} tekenvelden worden één voor één getoond. Tijdens de wizard wordt de weergave tijdelijk op 50% gezet.</p>
     <button type="button" class="button primary" id="startMobileSignatureWizard">Ondertekenen</button>`;
   form.insertAdjacentElement("afterbegin", intro);
 
@@ -139,7 +141,7 @@ document.head.appendChild(kbkbSignatureStyle);
       ? "Terug naar formulier op computer"
       : "Volgende";
     progress.textContent = `Veld ${index + 1} van ${steps.length}`;
-    window.setTimeout(() => pads[currentKey()]?.resize(), 60);
+    window.setTimeout(() => pads[currentKey()]?.resize(), 80);
   }
 
   function validateCurrent() {
@@ -174,6 +176,8 @@ document.head.appendChild(kbkbSignatureStyle);
       await releaseLandscape();
       document.documentElement.classList.remove("mobile-signature-wizard-open");
       document.body.classList.remove("mobile-signature-wizard-open");
+      ZoomApi?.restorePrevious?.(signingShell);
+      active = false;
     } catch (error) {
       showStatus("error", error instanceof Error ? error.message : "Verzenden is mislukt.");
       sending = false;
@@ -194,9 +198,11 @@ document.head.appendChild(kbkbSignatureStyle);
     statusBox.className = "status";
     document.documentElement.classList.add("mobile-signature-wizard-open");
     document.body.classList.add("mobile-signature-wizard-open");
+    ZoomApi?.forceFiftyPercent?.(signingShell);
     index = 0;
     renderStep();
     await requestLandscape();
+    window.setTimeout(() => pads[currentKey()]?.resize(), 140);
   });
 
   previousButton.addEventListener("click", () => {
@@ -219,7 +225,16 @@ document.head.appendChild(kbkbSignatureStyle);
   });
 
   form.addEventListener("submit", event => event.preventDefault());
+
+  signingShell.addEventListener("kbkbzoomchange", () => {
+    if (active) window.setTimeout(() => pads[currentKey()]?.resize(), 80);
+  });
+
   window.addEventListener("orientationchange", () => {
     if (active) window.setTimeout(() => pads[currentKey()]?.resize(), 180);
+  });
+
+  window.addEventListener("pagehide", () => {
+    ZoomApi?.restorePrevious?.(signingShell);
   });
 })();
