@@ -28,7 +28,7 @@ jobs:
 
       - name: Validate Python and JavaScript
         run: |
-          python3 -m py_compile local_server.py scripts/build_site.py
+          python3 -m py_compile local_server.py run_local.py xlsx_patch.py scripts/build_site.py
           for file in assets/js/*.js; do
             node --check "$file"
           done
