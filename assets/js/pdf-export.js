@@ -32,7 +32,7 @@
     if (!service?.local_server) {
       throw new Error(
         "De exacte Excel-naar-PDF-export werkt alleen via de lokale toepassing. " +
-        "Start start-windows.bat of voer ‘python local_server.py’ uit en open het formulier vanuit dat venster."
+        "Start start-windows.bat of voer ‘python run_local.py’ uit en open het formulier vanuit dat venster."
       );
     }
     if (!service.exact_excel_export) {
