@@ -1,18 +1,30 @@
 # KBKB Online Affiliatieformulier
 
-Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de Koninklijke Belgische Korfbalbond invult en lokaal als een nieuwe Excel-kopie (`.xlsx`) downloadt.
+Een statische webtoepassing waarmee een gebruiker het affiliatieformulier van de Koninklijke Belgische Korfbalbond invult en als printklare PDF exporteert.
 
 ## Belangrijkste kenmerken
 
 - volledig client-side: er is geen backend of database;
 - persoonsgegevens verlaten de browser niet;
-- het oorspronkelijke Excel-sjabloon is in `index.html` ingebouwd;
-- behoud van de bestaande Excel-opmaak, het logo, beveiliging en afdrukinstellingen;
+- export naar een overzichtelijke A4-PDF via het afdrukvenster;
 - validatie van verplichte velden, geboortedatum en Belgisch rijksregisternummer;
 - automatische velden voor een wettelijke vertegenwoordiger bij minderjarigen;
 - aanvullende velden voor een vorige buitenlandse korfbalclub;
+- aparte handtekeningvakken voor aanvrager, wettelijke vertegenwoordiger en clubsecretaris;
 - responsive werking op desktop, tablet en Android;
 - bruikbaar via GitHub Pages en als lokaal HTML-bestand.
+
+## Belangrijk: afdrukken en ondertekenen
+
+Na het invullen:
+
+1. Klik op **PDF maken**.
+2. Kies in het afdrukvenster **Opslaan als PDF**.
+3. Bewaar het document.
+4. Druk de opgeslagen PDF af.
+5. Plaats onderaan de vereiste handtekening(en) met pen.
+
+Een opgeslagen maar niet ondertekende PDF is nog niet volledig afgewerkt.
 
 ## Online gebruiken
 
@@ -32,8 +44,9 @@ Wanneer GitHub Pages nog niet actief is:
 1. Download of clone deze repository.
 2. Open `index.html` in een recente versie van Chrome, Edge of Firefox.
 3. Vul het formulier in.
-4. Klik op **Excel-kopie opslaan**.
-5. De browser bewaart de ingevulde `.xlsx`-kopie in de downloadmap.
+4. Klik op **PDF maken**.
+5. Kies **Opslaan als PDF** in het afdrukvenster.
+6. Druk de PDF daarna af en onderteken onderaan.
 
 Er is geen installatie, buildstap of internetverbinding nodig.
 
@@ -44,11 +57,17 @@ Er is geen installatie, buildstap of internetverbinding nodig.
 ├── .github/
 │   └── workflows/
 │       └── deploy-pages.yml
+├── assets/
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       ├── app.js
+│       ├── form.js
+│       ├── main.js
+│       └── pdf.js
 ├── docs/
 │   ├── PRIVACY.md
 │   └── VELDENMAPPING.md
-├── template/
-│   └── 4322_Affiliatieformulier_PC.xlsx
 ├── .gitignore
 ├── .nojekyll
 ├── index.html
@@ -57,16 +76,15 @@ Er is geen installatie, buildstap of internetverbinding nodig.
 
 ## Technische werking
 
-`index.html` bevat:
+De toepassing:
 
-- de volledige gebruikersinterface en styling;
-- het Excel-sjabloon als Base64-data;
-- een lokale ZIP/XLSX-lezer en -schrijver;
-- de veldmapping naar het eerste werkblad;
-- validatie en conditionele formuliersecties;
-- lokale bestandsdownload via de browser.
+- valideert de invoer volledig in de browser;
+- bouwt een afzonderlijke printklare A4-weergave op;
+- opent automatisch het afdrukvenster;
+- gebruikt de documenttitel als voorstel voor de PDF-bestandsnaam;
+- bevat geen externe analytics-, formulier- of opslagdienst.
 
-Bij het opslaan wordt een nieuwe Excel-werkmap in het browsergeheugen opgebouwd. De oorspronkelijke werkmap in de repository wordt niet gewijzigd.
+De gebruiker kiest in het afdrukvenster **Opslaan als PDF**. Hierdoor blijft de oplossing volledig lokaal en werkt ze ook offline.
 
 ## Ondersteunde browsers
 
@@ -77,18 +95,10 @@ Gebruik een recente versie van:
 - Mozilla Firefox;
 - een actuele Chromium-browser op Android.
 
-De browser moet `CompressionStream` en `DecompressionStream` ondersteunen.
+Pop-ups moeten voor de pagina toegestaan zijn, omdat de printklare PDF-weergave in een nieuw venster wordt geopend.
 
 ## Privacy en beveiliging
 
 De toepassing verzendt geen ingevulde gegevens naar GitHub, een server of een externe API. Zie [docs/PRIVACY.md](docs/PRIVACY.md) voor de technische privacy-uitleg.
 
-Let op: een ingevuld Excel-bestand kan gevoelige persoonsgegevens en een rijksregisternummer bevatten. Bewaar en deel het bestand uitsluitend via geschikte, beveiligde kanalen.
-
-## Excel-sjabloon
-
-Het oorspronkelijke bestand staat als naslag in:
-
-`template/4322_Affiliatieformulier_PC.xlsx`
-
-De werkende toepassing gebruikt echter de in `index.html` ingebouwde versie. Bij vervanging van het sjabloon moet ook de ingebouwde Base64-data en zo nodig de veldmapping worden bijgewerkt.
+Een geëxporteerde PDF kan gevoelige persoonsgegevens en een rijksregisternummer bevatten. Bewaar en deel het bestand uitsluitend via geschikte, beveiligde kanalen.
