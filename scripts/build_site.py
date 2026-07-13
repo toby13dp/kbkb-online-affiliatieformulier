@@ -20,14 +20,18 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "_site"
 LOGO_PARTS = sorted((ROOT / "assets" / "img").glob("logo-part-*.b64"))
 
-CSS_FILES = ("styles.css", "signature.css", "signature-wizard.css")
+CSS_FILES = (
+    "styles.css",
+    "signature.css",
+    "signature-wizard.css",
+    "signature-controls.css",
+)
 JS_FILES = (
     "form.js",
     "pdf-template.js",
     "pdf-exact.js",
     "signature-pad.js",
     "signature-pad-registry.js",
-    "signature-zoom.js",
     "signature-crypto.js",
     "signature-flow.js",
     "signature-wizard.js",
