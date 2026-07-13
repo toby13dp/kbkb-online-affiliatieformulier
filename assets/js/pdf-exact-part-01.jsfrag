@@ -1,0 +1,102 @@
+"use strict";
+
+const KBKB_PDF_PAGE_HEIGHT = 841.889763779528;
+const KBKB_HELVETICA_WIDTHS = [600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,556,556,333,500,278,556,500,722,500,500,500,334,260,334,584,350,556,350,222,556,333,1000,556,556,333,1000,667,333,1000,350,611,350,350,222,222,333,333,350,556,1000,333,1000,500,333,944,350,500,667,278,333,556,556,556,556,260,556,333,737,370,556,584,333,737,333,400,584,333,333,333,556,537,278,333,333,365,556,834,834,834,611,667,667,667,667,667,667,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,500,556,556,556,556,278,278,278,278,556,556,556,556,556,556,556,584,611,556,556,556,556,500,556,500];
+const KBKB_HELVETICA_BOLD_WIDTHS = [600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,600,278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,611,611,389,556,333,611,556,778,556,556,500,389,280,389,584,350,556,350,278,556,500,1000,556,556,333,1000,667,333,1000,350,611,350,350,278,278,500,500,350,556,1000,333,1000,556,333,944,350,500,667,278,333,556,556,556,556,280,556,333,737,370,556,584,333,737,333,400,584,333,333,333,611,556,278,333,333,365,556,834,834,834,611,722,722,722,722,722,722,1000,722,667,667,667,667,278,278,278,278,722,722,778,778,778,778,778,584,778,722,722,722,722,667,667,611,556,556,556,556,556,556,889,556,556,556,556,556,278,278,278,278,611,611,611,611,611,611,611,584,611,611,611,611,611,556,611,556];
+
+function kbkbBase64ToBytes(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+function kbkbLatin1(bytes) {
+  let out = "";
+  const size = 0x8000;
+  for (let i = 0; i < bytes.length; i += size) {
+    out += String.fromCharCode(...bytes.subarray(i, i + size));
+  }
+  return out;
+}
+
+function kbkbConcatBytes(chunks) {
+  const total = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+  const out = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return out;
+}
+
+function kbkbWinAnsiByte(char) {
+  const code = char.codePointAt(0);
+  if (code >= 32 && code <= 126) return code;
+  if (code >= 160 && code <= 255) return code;
+  const map = {
+    0x20AC: 0x80, 0x201A: 0x82, 0x0192: 0x83, 0x201E: 0x84,
+    0x2026: 0x85, 0x2020: 0x86, 0x2021: 0x87, 0x02C6: 0x88,
+    0x2030: 0x89, 0x0160: 0x8A, 0x2039: 0x8B, 0x0152: 0x8C,
+    0x017D: 0x8E, 0x2018: 0x91, 0x2019: 0x92, 0x201C: 0x93,
+    0x201D: 0x94, 0x2022: 0x95, 0x2013: 0x96, 0x2014: 0x97,
+    0x02DC: 0x98, 0x2122: 0x99, 0x0161: 0x9A, 0x203A: 0x9B,
+    0x0153: 0x9C, 0x017E: 0x9E, 0x0178: 0x9F
+  };
+  if (Object.prototype.hasOwnProperty.call(map, code)) return map[code];
+  const normalized = char.normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
+  const first = normalized.codePointAt(0);
+  return first >= 32 && first <= 126 ? first : 63;
+}
+
+function kbkbPdfEscape(value) {
+  let output = "";
+  for (const char of String(value ?? "")) {
+    const byte = kbkbWinAnsiByte(char);
+    if (byte === 40 || byte === 41 || byte === 92) {
+      output += "\\" + String.fromCharCode(byte);
+    } else if (byte < 32 || byte > 126) {
+      output += "\\" + byte.toString(8).padStart(3, "0");
+    } else {
+      output += String.fromCharCode(byte);
+    }
+  }
+  return output;
+}
+
+function kbkbTextWidth(value, fontSize, bold = false) {
+  const widths = bold ? KBKB_HELVETICA_BOLD_WIDTHS : KBKB_HELVETICA_WIDTHS;
+  let units = 0;
+  for (const char of String(value ?? "")) units += widths[kbkbWinAnsiByte(char)] || 600;
+  return units * fontSize / 1000;
+}
+
+function kbkbFitFont(value, preferredSize, maxWidth, bold = false, minimumSize = 5.2) {
+  let size = preferredSize;
+  while (size > minimumSize && kbkbTextWidth(value, size, bold) > maxWidth) size -= 0.2;
+  return Math.max(minimumSize, Number(size.toFixed(2)));
+}
+
+function kbkbTextCommand(value, field) {
+  const text = String(value ?? "").trim();
+  if (!text) return "";
+  const bold = Boolean(field.bold);
+  const size = kbkbFitFont(text, field.size || 8, field.maxWidth || 999, bold, field.minSize || 5.2);
+  const width = kbkbTextWidth(text, size, bold);
+  let x = field.anchor;
+  if (field.align === "center") x -= width / 2;
+  if (field.align === "right") x -= width;
+  const y = KBKB_PDF_PAGE_HEIGHT - field.bottom;
+  const font = bold ? "/F5" : "/F4";
+  return `BT ${font} ${size.toFixed(2)} Tf 0 0 0 rg 1 0 0 1 ${x.toFixed(3)} ${y.toFixed(3)} Tm (${kbkbPdfEscape(text)}) Tj ET`;
+}
+
+const KBKB_PDF_FIELDS = {
+  affiliationCompetition: { anchor: 116.335, bottom: 109.95, align: "center", maxWidth: 12, size: 8, bold: true },
+  affiliationRecreant: { anchor: 246.985, bottom: 111.90, align: "center", maxWidth: 12, size: 8, bold: true },
+  affiliationAdherent: { anchor: 330.125, bottom: 111.90, align: "center", maxWidth: 12, size: 8, bold: true },
+  affiliationOccasional: { anchor: 413.265, bottom: 111.90, align: "center", maxWidth: 12, size: 8, bold: true },
+  club: { anchor: 235.095, bottom: 134.38, align: "center", maxWidth: 240, size: 8 },
+  lastName: { anchor: 287.55, bottom: 169.59, align: "right", maxWidth: 255, size: 8 },
+  firstName: { anchor: 522.65, bottom: 169.59,
