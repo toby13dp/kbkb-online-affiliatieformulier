@@ -1,0 +1,418 @@
+.signature-section-body {
+  align-items: start;
+}
+
+.signing-notice {
+  padding: 14px 16px;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+
+.signing-notice strong {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.signing-notice-print {
+  border: 1px solid #d8b300;
+  background: #fff8cc;
+  color: #3d3300;
+}
+
+.signing-notice-digital {
+  border: 1px solid #98d3be;
+  background: #edf9f5;
+  color: #075b40;
+}
+
+.signing-pad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.signing-pad-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.signing-pad-card.wide {
+  grid-column: 1 / -1;
+}
+
+.signing-pad-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  background: #f6f7f8;
+  font-size: .86rem;
+}
+
+.signing-pad-head button {
+  border: 0;
+  background: transparent;
+  color: #685900;
+  font-size: .78rem;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.signature-canvas-wrap {
+  position: relative;
+  min-height: 112px;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(0,0,0,.045) 27px 28px);
+}
+
+.signature-canvas-wrap.signature {
+  min-height: 176px;
+}
+
+.signature-canvas-wrap canvas {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 100%;
+  height: 112px;
+  cursor: crosshair;
+}
+
+.signature-canvas-wrap.signature canvas {
+  height: 176px;
+}
+
+.signature-canvas-wrap canvas.is-disabled {
+  cursor: default;
+}
+
+.signature-canvas-wrap > span {
+  position: absolute;
+  z-index: 1;
+  right: 12px;
+  bottom: 8px;
+  color: #9aa1aa;
+  font-size: .72rem;
+  pointer-events: none;
+}
+
+.guardian-signing,
+.mobile-guardian-fields {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 3px solid var(--brand-yellow);
+}
+
+.guardian-signing-title {
+  margin-bottom: 14px;
+  padding: 13px 15px;
+  border: 1px solid #efb5b5;
+  border-radius: 12px;
+  background: #fff4f4;
+  color: #8f1515;
+}
+
+.guardian-signing-title strong,
+.guardian-signing-title span {
+  display: block;
+}
+
+.guardian-signing-title span {
+  margin-top: 4px;
+  font-size: .84rem;
+}
+
+.desktop-signing-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 17px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+
+.desktop-signing-card strong {
+  display: block;
+  font-size: .98rem;
+}
+
+.desktop-signing-card p {
+  max-width: 720px;
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.desktop-signing-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+.remote-signature-preview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.remote-signature-preview > div {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.remote-signature-preview > div.wide {
+  grid-column: 1 / -1;
+}
+
+.remote-signature-preview span {
+  display: block;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--line);
+  background: #f7f8f9;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.remote-signature-preview canvas {
+  display: block;
+  width: 100%;
+  height: 78px;
+}
+
+.signing-modal[hidden] {
+  display: none;
+}
+
+.signing-modal {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.signing-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(8px);
+}
+
+.signing-modal-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+  padding: 28px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 30px 90px rgba(0,0,0,.35);
+}
+
+.signing-modal-dialog h2 {
+  margin: 0;
+  font-size: 1.7rem;
+}
+
+.signing-modal-dialog > p:not(.eyebrow):not(.signing-security-note) {
+  color: var(--muted);
+}
+
+.signing-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.signing-modal-open {
+  overflow: hidden;
+}
+
+.signing-connection-state {
+  margin: 14px 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  background: #f3f4f6;
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.signing-qr {
+  display: grid;
+  place-items: center;
+  min-height: 250px;
+  margin: 12px auto 18px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.signing-qr img,
+.signing-qr canvas {
+  display: block;
+  max-width: 100%;
+  height: auto !important;
+}
+
+.signing-qr-error {
+  max-width: 360px;
+  color: var(--danger);
+  text-align: center;
+}
+
+.signing-url-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: .8rem;
+  font-weight: 750;
+}
+
+.signing-url-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.signing-url-row input {
+  min-width: 0;
+}
+
+.signing-security-note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+.mobile-signing-page {
+  background: #efefef;
+}
+
+.mobile-signing-shell {
+  width: min(760px, calc(100% - 20px));
+  margin: 0 auto;
+  padding: 12px 0 calc(34px + env(safe-area-inset-bottom));
+}
+
+.mobile-signing-header {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #000;
+  color: #fff;
+}
+
+.mobile-signing-header img {
+  display: block;
+  width: 100%;
+  max-height: 105px;
+  object-fit: contain;
+}
+
+.mobile-signing-header h1 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.35rem, 7vw, 2rem);
+}
+
+.mobile-signing-header p:last-child {
+  margin: 8px 0 0;
+  color: #c9c9cc;
+  font-size: .83rem;
+}
+
+.mobile-signing-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mobile-signing-fields .signing-pad-card.wide {
+  grid-column: 1 / -1;
+}
+
+.mobile-send-button {
+  position: sticky;
+  z-index: 10;
+  bottom: calc(8px + env(safe-area-inset-bottom));
+  width: 100%;
+  margin-top: 16px;
+  min-height: 54px;
+  font-size: 1rem;
+}
+
+@media (max-width: 720px) {
+  .signing-pad-grid,
+  .mobile-signing-fields,
+  .remote-signature-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .signing-pad-card.wide,
+  .mobile-signing-fields .signing-pad-card.wide,
+  .remote-signature-preview > div.wide {
+    grid-column: 1;
+  }
+
+  .desktop-signing-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .desktop-signing-actions {
+    display: grid;
+    width: 100%;
+  }
+
+  .signing-modal-dialog {
+    padding: 24px 18px;
+  }
+
+  .signing-url-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-signing-header {
+    grid-template-columns: 78px minmax(0, 1fr);
+    padding: 13px;
+  }
+
+  .signature-canvas-wrap,
+  .signature-canvas-wrap canvas {
+    min-height: 132px;
+    height: 132px;
+  }
+
+  .signature-canvas-wrap.signature,
+  .signature-canvas-wrap.signature canvas {
+    min-height: 205px;
+    height: 205px;
+  }
+}
